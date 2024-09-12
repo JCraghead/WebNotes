@@ -1,0 +1,10 @@
+const pageBody = document.body;
+const newPar = document.createElement('p');
+newPar.innerHTML = "This page is audited by WebNotes";
+newPar.style.position = "absolute";
+newPar.style.left = "300px";
+newPar.style.top = "150px";
+newPar.style.backgroundColor = 'rgb(0,0,0,0.5)';
+newPar.style.color = 'rgb(255,255,255)';
+newPar.style.zIndex = 10;
+pageBody.appendChild(newPar);
