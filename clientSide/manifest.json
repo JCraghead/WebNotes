@@ -3,11 +3,19 @@
     "name": "WebNotes",
     "description": "WebNotes client side handler",
     "version": "1.0",
+    "permissions": [
+      "tabs",
+      "activeTab"
+    ],
     "action": {
       "default_popup": "popup.html",
       "default_icon": "images/logo.png"
     },
     
+    "background": {
+      "service_worker": "scripts/worker.js"
+    },
+
     "content_scripts": [
     {
       "js": ["scripts/content.js"],
