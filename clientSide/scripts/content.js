@@ -1,11 +1,11 @@
 //declare global variables
 var urlString;
+const pageBody = document.body;
 
 //initWebPage: creates webpage note that tells the user
 //  the webpage is audited by WebNotes
 function initWebPage() {
     //create element
-    const pageBody = document.body;
     const newPar = document.createElement('p');
 
     //add element attributes
@@ -30,12 +30,27 @@ function getURL() {
     })();
 }
 
+function createNote()
+   {
+    const newSticky = document.createElement('p');
+    newSticky.innerHTML = "New Note!";
+    newSticky.style.position = "absolute";
+    newSticky.style.left = "300px";
+    newSticky.style.top = "300px";
+    newSticky.style.backgroundColor = 'rgb(0,0,0,0.5)';
+    newSticky.style.color = 'rgb(255,255,255)';
+    newSticky.style.zIndex = 10;
+
+    pageBody.appendChild(newSticky);
+   }
+
 //add event listener for createNote button to be pressed from popup script
 chrome.runtime.onMessage.addListener(
     function (message, sender, sendResponse) {
         //read the message
         if (message.message == "createNote") {
             //create new note
+            createNote();
             console.log("create note!");
         }
         //awknowledge message recieved
