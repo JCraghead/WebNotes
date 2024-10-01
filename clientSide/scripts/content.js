@@ -39,12 +39,14 @@ function createNote(xPos, yPos, innerText, color, noteId) {
     //create div, header div, and paragraph elements for new note
     const stickyDiv = document.createElement('div');
     const stickyHeaderDiv = document.createElement('div');
-    const stickyPar = document.createElement('p');
+    const stickyText = document.createElement('textarea');
+    const lineBreak = document.createElement('br');
     const stickyDelDiv = document.createElement('nb');
 
     //header div and paragraph become children of stickyDiv
     stickyDiv.appendChild(stickyHeaderDiv);
-    stickyDiv.appendChild(stickyPar);
+    stickyDiv.appendChild(stickyText);
+    //stickyDiv.appendChild(lineBreak);
     stickyDiv.appendChild(stickyDelDiv);
 
     //css styling for header div
@@ -53,6 +55,10 @@ function createNote(xPos, yPos, innerText, color, noteId) {
     stickyHeaderDiv.style.backgroundColor = 'rgb(0,0,0,0.5)';
     stickyHeaderDiv.style.color = 'rgb(255,255,255)';
     stickyHeaderDiv.style.cursor = 'grab';
+    stickyHeaderDiv.style.padding = "2px";
+    stickyHeaderDiv.style.marginLeft = "auto";
+    stickyHeaderDiv.style.marginRight = "auto";
+    stickyHeaderDiv.style.borderRadius = "5px";
 
     //css styling for sticky div
     stickyDiv.style.textAlign = "center";
@@ -62,19 +68,40 @@ function createNote(xPos, yPos, innerText, color, noteId) {
     stickyDiv.style.left = xPos;
     stickyDiv.style.top = yPos;
     stickyDiv.style.backgroundColor = color;
-    stickyPar.style.color = 'rgb(0,0,0)';
     stickyDiv.style.zIndex = 10;
     stickyDiv.style.padding = "10px";
+    stickyDiv.style.maxWidth = "500px";
+    stickyDiv.style.maxHeight = "500px";
+    stickyDiv.style.display = "flex";
+    stickyDiv.style.justifyContent = "center";
+    stickyDiv.style.flexDirection = "column";
+    stickyDiv.style.boxShadow = "3px 3px 1px rgba(0, 0, 0, 0.5)";
+    stickyDiv.style.borderRadius = "5px";
+
 
     //css styling for delete div
     stickyDelDiv.innerText = "X";
     stickyDelDiv.style.color = "rgb(255,0,0)";
     stickyDelDiv.style.cursor = "pointer";
+    stickyDelDiv.style.maxWidth = "10px";
+    stickyDelDiv.style.marginLeft = "auto";
+    stickyDelDiv.style.marginRight = "auto";
 
     //css styling for sticky paragraph
-    stickyPar.classList = ["stickyPar"];
-    stickyPar.innerHTML = innerText;
-    stickyPar.style.marginBottom = 0;
+    stickyText.classList = ["stickyText"];
+    stickyText.style.color = 'rgb(0,0,0)';
+    stickyText.placeholder = innerText;
+    stickyText.style.marginBottom = 0;
+    stickyText.style.width = "100px";
+    stickyText.style.maxWidth = "480px";
+    stickyText.style.maxHeight = "450px";
+    stickyText.style.minWidth = "100px";
+    stickyText.style.minHeight = "50px";
+    stickyText.contentEditable = true;
+    stickyText.style.border = "none";
+    stickyText.style.background = "transparent";
+
+    
 
     //append new note to page body
     pageBody.appendChild(stickyDiv);
@@ -89,7 +116,7 @@ chrome.runtime.onMessage.addListener(
         //read the message
         if (message.message == "createNote") {
             //create new note
-            let newSticky = { "xPos": 300, "yPos": 300 + window.scrollY, "innerText": "New Note!", color: "rgb(255,255,0,0.5)", id: uniqueStickyId };
+            let newSticky = { "xPos": 300, "yPos": 300 + window.scrollY, "innerText": "New Note!", color: "rgb(255,255,0,0.8)", id: uniqueStickyId };
 
             stickyCount = stickyNotes.push(newSticky);
             createNote(newSticky.xPos + "px", newSticky.yPos + "px", newSticky.innerText, newSticky.color, newSticky.id);
@@ -130,6 +157,8 @@ function getNewId()
     }
    }
 
+
+
 //DRAGABLE CODE:
 
 //updates drag for all notes with class "stickyDiv"
@@ -149,7 +178,8 @@ function dragElement(elmnt, index) {
         // otherwise, move the DIV from anywhere inside the DIV:
         elmnt.onmousedown = dragMouseDown;
     }
-    elmnt.children[2].onmousedown = deleteNote;
+    elmnt.children[elmnt.children.length - 1].onmousedown = deleteNote;
+    elmnt.children[1].oninput = updateText;
 
     function dragMouseDown(e) {
         e = e || window.event;
@@ -202,6 +232,16 @@ function dragElement(elmnt, index) {
                 stickyCount--;
                 console.log(stickyNotes);
                 getNewId();
+                break;
+            }
+        }
+    }
+    function updateText()
+        {
+        for (let i = 0; i < stickyNotes.length; i++) {
+            if (stickyNotes[i].id == elmnt.id) {
+                stickyNotes[i].innerText = elmnt.children[1].value;
+                console.log(elmnt.children[1].value);
                 break;
             }
         }
