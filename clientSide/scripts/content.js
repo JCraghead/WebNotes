@@ -5,9 +5,18 @@ var stickyNotes = [];
 var stickyCount = 0;
 var uniqueStickyId = 0;
 
+
 //initWebPage: creates webpage note that tells the user
 //  the webpage is audited by WebNotes
 function initWebPage() {
+    //get URL for current tab
+    let urlPromise = getURL();
+    urlPromise.then(result => {
+        //set global URL variable
+        urlString = result;
+        console.log(urlString);
+    });
+
     //create element
     const newPar = document.createElement('p');
 
@@ -22,6 +31,9 @@ function initWebPage() {
 
     //add new element to the page body
     pageBody.appendChild(newPar);
+    getNewId();
+    loadNotes();
+    getNewId();
 }
 
 //getURL: sends a request to worker script for URL; returns the promise of the request
@@ -50,12 +62,13 @@ function createNote(xPos, yPos, innerText, color, noteId) {
     stickyDiv.appendChild(stickyDelDiv);
 
     //css styling for header div
-    stickyHeaderDiv.innerHTML = "Drag Here";
+    //stickyHeaderDiv.innerHTML = " - ";
+    stickyHeaderDiv.style.height = "10px";
     stickyHeaderDiv.classList = ["stickyHeader"];
-    stickyHeaderDiv.style.backgroundColor = 'rgb(0,0,0,0.5)';
+    stickyHeaderDiv.style.backgroundColor = 'rgb(0,0,0,0.2)';
     stickyHeaderDiv.style.color = 'rgb(255,255,255)';
     stickyHeaderDiv.style.cursor = 'grab';
-    stickyHeaderDiv.style.padding = "2px";
+    stickyHeaderDiv.style.minWidth = "100px";
     stickyHeaderDiv.style.marginLeft = "auto";
     stickyHeaderDiv.style.marginRight = "auto";
     stickyHeaderDiv.style.borderRadius = "5px";
@@ -77,7 +90,7 @@ function createNote(xPos, yPos, innerText, color, noteId) {
     stickyDiv.style.flexDirection = "column";
     stickyDiv.style.boxShadow = "3px 3px 1px rgba(0, 0, 0, 0.5)";
     stickyDiv.style.borderRadius = "5px";
-
+    stickyDiv.style.paddingBottom = 0;
 
     //css styling for delete div
     stickyDelDiv.innerText = "X";
@@ -90,7 +103,16 @@ function createNote(xPos, yPos, innerText, color, noteId) {
     //css styling for sticky paragraph
     stickyText.classList = ["stickyText"];
     stickyText.style.color = 'rgb(0,0,0)';
-    stickyText.placeholder = innerText;
+
+    if(innerText == "")
+    {
+        stickyText.placeholder = "New Note!";
+    }
+    else
+    {
+        stickyText.innerHTML = innerText;
+    }
+
     stickyText.style.marginBottom = 0;
     stickyText.style.width = "100px";
     stickyText.style.maxWidth = "480px";
@@ -105,9 +127,6 @@ function createNote(xPos, yPos, innerText, color, noteId) {
 
     //append new note to page body
     pageBody.appendChild(stickyDiv);
-
-    //update drag functionality for each note
-    updateDrag();
 }
 
 //add event listener for createNote button to be pressed from popup script
@@ -116,11 +135,13 @@ chrome.runtime.onMessage.addListener(
         //read the message
         if (message.message == "createNote") {
             //create new note
-            let newSticky = { "xPos": 300, "yPos": 300 + window.scrollY, "innerText": "New Note!", color: "rgb(255,255,0,0.8)", id: uniqueStickyId };
+            let newSticky = { "xPos": 300, "yPos": 300 + window.scrollY, "innerText": "", color: "rgb(255,255,0,0.8)", id: uniqueStickyId };
 
             stickyCount = stickyNotes.push(newSticky);
             createNote(newSticky.xPos + "px", newSticky.yPos + "px", newSticky.innerText, newSticky.color, newSticky.id);
-            console.log(newSticky);
+
+            //update drag functionality for each note
+            updateDrag();
 
             getNewId();
         }
@@ -129,13 +150,7 @@ chrome.runtime.onMessage.addListener(
     }
 );
 
-//get URL for current tab
-let urlPromise = getURL();
-urlPromise.then(result => {
-    //set global URL variable
-    urlString = result;
-    console.log(urlString);
-});
+
 
 
 //get lowest unique id
@@ -163,13 +178,14 @@ function getNewId()
 
 //updates drag for all notes with class "stickyDiv"
 function updateDrag() {
-    for (let i = 0; i < stickyCount; i++) {
-        dragElement(document.getElementById(stickyNotes[i].id), i);
+    for (let i = 0; i < stickyNotes.length; i++) {
+        console.log("update drag on "+stickyNotes[i].id);
+        dragElement(document.getElementById(stickyNotes[i].id));
     }
 }
 
 //credit to W3Schools.com for draggable js code; adapted by Lucas Larson
-function dragElement(elmnt, index) {
+function dragElement(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     if (elmnt.children[0]) {
         // if present, the header is where you move the DIV from:
@@ -202,7 +218,7 @@ function dragElement(elmnt, index) {
         pos2 = pos4 - e.clientY;
         pos3 = e.clientX;
         pos4 = e.clientY;
-        // set the element's new position:
+        // set the element's new position:1
         elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
         elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
 
@@ -222,6 +238,9 @@ function dragElement(elmnt, index) {
                 break;
             }
         }
+
+        //save sticky notes
+        saveNotes();
     }
 
     function deleteNote() {
@@ -230,24 +249,53 @@ function dragElement(elmnt, index) {
                 pageBody.removeChild(elmnt);
                 stickyNotes.splice(i, 1);
                 stickyCount--;
-                console.log(stickyNotes);
                 getNewId();
                 break;
             }
         }
+        //save sticky notes
+        saveNotes();
     }
     function updateText()
         {
+        elmnt.children[1].style.height = "auto";
+        elmnt.children[1].style.height = `${elmnt.children[1].scrollHeight}px`;
         for (let i = 0; i < stickyNotes.length; i++) {
             if (stickyNotes[i].id == elmnt.id) {
                 stickyNotes[i].innerText = elmnt.children[1].value;
-                console.log(elmnt.children[1].value);
                 break;
             }
         }
+        //save sticky notes
+        saveNotes();
 
     }
+
+    function saveNotes()
+       {
+        localStorage.setItem("stickyData", JSON.stringify(stickyNotes));
+        console.log("notes saved!");
+       }
+
 }
 
+function loadNotes()
+   {
+    let stickyData = localStorage.getItem("stickyData");
+    if(stickyData)
+    {
+        console.log("loading notes");
+        stickyNotes = JSON.parse(stickyData);
+        stickyCount = stickyNotes.length;
+        for(let i = 0; i < stickyNotes.length; i++)
+        {
+            createNote(stickyNotes[i].xPos, stickyNotes[i].yPos, stickyNotes[i].innerText, stickyNotes[i].color, stickyNotes[i].id);
+        }
+        console.log(stickyNotes);
+        //update drag functionality for each note
+        updateDrag();
+        
+    }
+   }
 
 initWebPage();
