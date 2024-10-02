@@ -26,28 +26,27 @@ For students who need an efficient way to manage notes, WebNotes is a chrome ext
 
 ## **3\. Functional requirements (features):**
 
-*1\) **Create and manage notes:** Users can create, edit, and delete notes directly from the Chrome extension.  
-*2\) **Highlight and save web text:** Users can highlight text on any webpage and save it as a note within the extension.  
-*3\) **Organize notes with tags:** Users can organize notes by adding tags for easy searching and categorization.  
-*4\) **Search notes:** A search functionality that allows users to find saved notes based on keywords or tags.  
-*5\) **Export notes:** Users can export notes in different formats (e.g., plain text, PDF).  
-*6\) **Sync across devices:** Users can sync notes across multiple devices by signing in with their account.  
-*7\) **Auto-save:** Notes are automatically saved as users type.  
-*8\) **Pin notes:** Users can pin important notes to keep them easily accessible.  
-*9\) **Webpage snapshot:** Users can save a snapshot or URL of the webpage with the note for context.  
-*10\) **Dark mode:** A user interface option for dark mode to enhance readability in low-light conditions.
+1\) **Create and manage notes:** Users can create, edit, and delete notes directly from the Chrome extension.  
+2\) **Highlight and save web text:** Users can highlight text on any webpage and save it as a note within the extension.  
+3\) **Organize notes with tags:** Users can organize notes by adding tags for easy searching and categorization.  
+4\) **Search notes:** A search functionality that allows users to find saved notes based on keywords or tags.  
+5\) **Export notes:** Users can export notes in different formats (e.g., plain text, PDF).  
+6\) **Sync across devices:** Users can sync notes across multiple devices by signing in with their account.  
+7\) **Auto-save:** Notes are automatically saved as users type.  
+8\) **Pin notes:** Users can pin important notes to keep them easily accessible.  
+9\) **Webpage snapshot:** Users can save a snapshot or URL of the webpage with the note for context.  
+10\) **Dark mode:** A user interface option for dark mode to enhance readability in low-light conditions.
 
 
 ## **4\. Non-functional requirements:**
 
-*1\) **Usability:** The interface should be intuitive and user-friendly, allowing users to save notes in under 5 seconds. Usability tests will ensure a success rate of 90% or higher.  
-*2\) **Performance:** The extension should load and save notes within 1 second after user input on an average internet connection.  
-*3\) **Security:** Notes and user data should be encrypted both in transit and at rest. All saved data must be compliant with privacy standards like GDPR.  
-*4\) **Compatibility:** The extension must work on the latest versions of Chrome and other commonly used browsers.  
-*5\) **Availability:** The service should be available 99.9% of the time, excluding scheduled maintenance.  
-*6\) **Portability:** Users should be able to sync their notes across different devices without any data loss or performance degradation.  
-*7\) **Scalability:** The extension must handle up to 100,000 users without performance loss, with the ability to scale further.  
-*8\) **Accessibility:** The extension should be WCAG 2.1 compliant, ensuring it is accessible to users with disabilities, including keyboard navigation support and screen reader compatibility.
+1\) **Usability:** The interface should be intuitive and user-friendly, allowing users to save notes in under 5 seconds. Usability tests will ensure a success rate of 90% or higher.  
+2\) **Performance:** The extension should load and save notes within 1 second after user input on an average internet connection.  
+3\) **Security:** Notes and user data should be encrypted both in transit and at rest. All saved data must be compliant with privacy standards like GDPR.  4\) **Compatibility:** The extension must work on the latest versions of Chrome and other commonly used browsers.  
+5\) **Availability:** The service should be available 99.9% of the time, excluding scheduled maintenance.  
+6\) **Portability:** Users should be able to sync their notes across different devices without any data loss or performance degradation.  
+7\) **Scalability:** The extension must handle up to 100,000 users without performance loss, with the ability to scale further.  
+8\) **Accessibility:** The extension should be WCAG 2.1 compliant, ensuring it is accessible to users with disabilities, including keyboard navigation support and screen reader compatibility.
 
 ## **5\. MVP:**
 
