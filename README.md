@@ -24,9 +24,10 @@ Installing
 A step by step series of examples that tell you how to get a development env running
 
 ## Developers;
-Jarom - 
-Lucas - 
-Landon - 
+Jarom Craghead- 
+Lucas Larson- 
+Landon Coonrod- 
 Avnish Sinha -
+Ronan DeGeyter-
 
 ## License
