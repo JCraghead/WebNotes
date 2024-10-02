@@ -21,7 +21,8 @@
       "js": ["scripts/content.js"],
       "matches": [
         "https://canvas.nau.edu/*"
-      ]
+      ],
+      "run_at": "document_idle"
     }
   ]
   }

@@ -5,7 +5,10 @@ function createNote()
         //send message "createNote"
         chrome.tabs.sendMessage(tabs[0].id, {message:"createNote"}, function(response){
             //log response
-            console.log(response.message);
+            if(response)
+                {
+                 console.log(response.message);
+                }
         });
     });
    }
