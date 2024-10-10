@@ -8,3 +8,8 @@ a:visited
 {
     color:rgb(255, 255, 0);
 }
+#buttons{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
