@@ -308,6 +308,7 @@ function saveNotes()
        {
         localStorage.setItem(urlString+"stickyData", JSON.stringify(stickyNotes));
         console.log("notes saved!");
+        sendNotesToServer();
        }
 
 function loadNotes()
@@ -333,6 +334,14 @@ function loadNotes()
 function sendNotesToServer()
 {
     console.log("sent");
+    fetch("http://127.0.0.1:5000/sendNotes", {
+        method: "POST",
+        body: JSON.stringify(stickyNotes),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          "Access-Control-Allow-Origin": "*"
+        }
+      })
 }
 
 initWebPage();
