@@ -15,6 +15,9 @@ function initWebPage() {
         //set global URL variable
         urlString = result;
         console.log(urlString);
+        getNewId();
+        loadNotes();
+        getNewId();
     });
 
     //create element
@@ -31,9 +34,6 @@ function initWebPage() {
 
     //add new element to the page body
     pageBody.appendChild(newPar);
-    getNewId();
-    loadNotes();
-    getNewId();
 }
 
 //getURL: sends a request to worker script for URL; returns the promise of the request
@@ -138,6 +138,7 @@ chrome.runtime.onMessage.addListener(
             let newSticky = { "xPos": 300, "yPos": 300 + window.scrollY, "innerText": "", color: "rgb(255,255,0,0.8)", id: uniqueStickyId };
 
             stickyCount = stickyNotes.push(newSticky);
+            console.log("New sticky: "+uniqueStickyId);
             createNote(newSticky.xPos + "px", newSticky.yPos + "px", newSticky.innerText, newSticky.color, newSticky.id);
 
             //update drag functionality for each note
@@ -145,6 +146,12 @@ chrome.runtime.onMessage.addListener(
 
             getNewId();
         }
+        if(message.message == "clearNotes")
+        {
+            console.log("clear!!");
+            clearNotes();
+        }
+
         //awknowledge message recieved
         sendResponse({ message: "Recieved message" });
     }
@@ -172,14 +179,36 @@ function getNewId()
     }
    }
 
+//clearNotes: clears stickyNote array, resets id, removes each element from DOM, and save
+function clearNotes()
+   {
+    //reset array and id
+    stickyNotes = [];
+    uniqueStickyId = 0;
 
+    //prime loop with stickies to clear
+    let stickiesToClear = document.getElementsByClassName("stickyDiv");
+    let numStickiesToClear = stickiesToClear.length;
+
+    //loop through every sticky element
+    while(numStickiesToClear != 0)
+    {
+        //remove sticky
+        document.body.removeChild(stickiesToClear[0]);
+
+        //reprime loop
+        stickiesToClear = document.getElementsByClassName("stickyDiv");
+        numStickiesToClear = stickiesToClear.length;
+    }
+    //save notes
+    saveNotes();
+   }
 
 //DRAGABLE CODE:
 
 //updates drag for all notes with class "stickyDiv"
 function updateDrag() {
     for (let i = 0; i < stickyNotes.length; i++) {
-        console.log("update drag on "+stickyNotes[i].id);
         dragElement(document.getElementById(stickyNotes[i].id));
     }
 }
@@ -271,17 +300,20 @@ function dragElement(elmnt) {
 
     }
 
-    function saveNotes()
-       {
-        localStorage.setItem("stickyData", JSON.stringify(stickyNotes));
-        console.log("notes saved!");
-       }
+    
 
 }
 
+function saveNotes()
+       {
+        localStorage.setItem(urlString+"stickyData", JSON.stringify(stickyNotes));
+        console.log("notes saved!");
+       }
+
 function loadNotes()
    {
-    let stickyData = localStorage.getItem("stickyData");
+    console.log(urlString+"/stickyData");
+    let stickyData = localStorage.getItem(urlString+"stickyData");
     if(stickyData)
     {
         console.log("loading notes");
@@ -297,5 +329,10 @@ function loadNotes()
         
     }
    }
+
+function sendNotesToServer()
+{
+    console.log("sent");
+}
 
 initWebPage();
