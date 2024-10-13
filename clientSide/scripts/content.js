@@ -20,20 +20,24 @@ function initWebPage() {
         getNewId();
     });
 
-    //create element
-    const newPar = document.createElement('p');
 
-    //add element attributes
-    newPar.innerHTML = "This page is audited by WebNotes";
-    newPar.style.position = "absolute";
-    newPar.style.left = "300px";
-    newPar.style.top = "150px";
-    newPar.style.backgroundColor = 'rgb(0,0,0,0.5)';
-    newPar.style.color = 'rgb(255,255,255)';
-    newPar.style.zIndex = 10;
+    const menuList = document.getElementById("menu");
+    const menuItemListWrapper = document.createElement("li");
+    const menuItemAnchorWrapper = document.createElement("a");
+    const menuItemDivWrapper = document.createElement("div");
+    const menuItem = document.createElement('img');
 
-    //add new element to the page body
-    pageBody.appendChild(newPar);
+    menuItemDivWrapper.appendChild(menuItem);
+    menuItemAnchorWrapper.appendChild(menuItemDivWrapper);
+    menuItemListWrapper.appendChild(menuItemAnchorWrapper);
+    menuList.appendChild(menuItemListWrapper);
+
+    menuItem.src = chrome.runtime.getURL("./images/logo_full_text.svg");
+    menuItem.style.width = "84px";
+    menuItem.style.height = "62.59px";
+    menuItem.style.objectFit = "contain";
+    menuItem.style.cursor = "pointer";
+    menuItem.onclick = createNewSticky;
 }
 
 //getURL: sends a request to worker script for URL; returns the promise of the request
@@ -135,16 +139,7 @@ chrome.runtime.onMessage.addListener(
         //read the message
         if (message.message == "createNote") {
             //create new note
-            let newSticky = { "xPos": 300, "yPos": 300 + window.scrollY, "innerText": "", color: "rgb(255,255,0,0.8)", id: uniqueStickyId };
-
-            stickyCount = stickyNotes.push(newSticky);
-            console.log("New sticky: "+uniqueStickyId);
-            createNote(newSticky.xPos + "px", newSticky.yPos + "px", newSticky.innerText, newSticky.color, newSticky.id);
-
-            //update drag functionality for each note
-            updateDrag();
-
-            getNewId();
+            createNewSticky();
         }
         if(message.message == "clearNotes")
         {
@@ -158,7 +153,18 @@ chrome.runtime.onMessage.addListener(
 );
 
 
+function createNewSticky()
+   {
+    //create new note
+    let newSticky = { "xPos": 300, "yPos": 300 + window.scrollY, "innerText": "", color: "rgb(255,255,0,0.8)", id: uniqueStickyId };
+    stickyCount = stickyNotes.push(newSticky);
+    console.log("New sticky: "+uniqueStickyId);
+    createNote(newSticky.xPos + "px", newSticky.yPos + "px", newSticky.innerText, newSticky.color, newSticky.id);
+    //update drag functionality for each note
+    updateDrag();
 
+    getNewId();
+   }
 
 //get lowest unique id
 function getNewId()
@@ -331,17 +337,36 @@ function loadNotes()
     }
    }
 
-function sendNotesToServer()
-{
-    console.log("sent");
-    fetch("http://127.0.0.1:5000/sendNotes", {
-        method: "POST",
-        body: JSON.stringify(stickyNotes),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-          "Access-Control-Allow-Origin": "*"
-        }
-      })
-}
+//sendNotesToServer: sends current note array to server
+async function sendNotesToServer()
+   {
+    console.log("sending notes to server...");
+    try
+       {
+        //send post request with fetch
+        const response = await fetch("http://127.0.0.1:5000/sendNotes", 
+           {
+            method: "POST",
+            body: JSON.stringify(stickyNotes),
+            headers: {
+            "Content-type": "application/json; charset=UTF-8",
+            "Access-Control-Allow-Origin": "*"
+            }
+           })
+
+        //check response intergrity
+        if(!response.ok)
+           {
+            throw new Error('Response status: ${reponse.status}');
+           }
+        //display response
+        console.log(await response.json())
+       }
+    //if server is unreachable catch error and print
+    catch(error)
+       {
+        console.log(error.message)
+       }
+   }
 
 initWebPage();
