@@ -4,18 +4,19 @@ from flask import Flask, request
 from flask_cors import CORS
 import json  
    
-# Setup flask server 
+#setup flask app
 app = Flask(__name__)  
 CORS(app)
   
-# Setup url route which will calculate 
-# total sum of array. 
+#setup server to recieve and respond to post requests
 @app.route('/sendNotes', methods = ['POST'])  
-def receiveNotes():  
+def receiveNotes():
+    #parse and print data
     data = request.get_json()  
     print(data) 
 
-    response = json.dumps({"headers":{'Access-Control-Allow-Origin':'*'}})
+    #send response
+    response = json.dumps({"headers":{'Access-Control-Allow-Origin':'*'},"body":"Stickies recieved"})
     return response
    
 if __name__ == "__main__":  
