@@ -20,7 +20,7 @@ function initWebPage() {
         getNewId();
     });
 
-
+    //new comment
     const menuList = document.getElementById("menu");
     const menuItemListWrapper = document.createElement("li");
     const menuItemAnchorWrapper = document.createElement("a");
