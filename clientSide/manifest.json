@@ -9,7 +9,7 @@
     ],
     "action": {
       "default_popup": "popup.html",
-      "default_icon": "images/logo.png"
+      "default_icon": "images/logo_full.png"
     },
     
     "background": {
@@ -21,7 +21,13 @@
       "js": ["scripts/content.js"],
       "matches": [
         "https://canvas.nau.edu/*"
-      ]
-    }
-  ]
+      ],
+      "run_at": "document_idle"
+    } 
+  ],
+  "web_accessible_resources": [
+    {"resources":["images/logo_full_text.svg"],
+    "matches":["https://canvas.nau.edu/*"]
+    }]
+
   }

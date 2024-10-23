@@ -1,23 +1,23 @@
+#install flask and flask-cors before hand!!
+
 from flask import Flask, request 
+from flask_cors import CORS
 import json  
    
-# Setup flask server 
+#setup flask app
 app = Flask(__name__)  
+CORS(app)
   
-# Setup url route which will calculate 
-# total sum of array. 
-@app.route('/arraysum', methods = ['POST'])  
-def sum_of_array():  
+#setup server to recieve and respond to post requests
+@app.route('/sendNotes', methods = ['POST'])  
+def receiveNotes():
+    #parse and print data
     data = request.get_json()  
     print(data) 
-  
-    # Data variable contains the  
-    # data from the node server 
-    ls = data['array']  
-    result = sum(ls) # calculate the sum 
-  
-    # Return data in json format  
-    return json.dumps({"result":result}) 
+
+    #send response
+    response = json.dumps({"headers":{'Access-Control-Allow-Origin':'*'},"body":"Stickies recieved"})
+    return response
    
 if __name__ == "__main__":  
     app.run(port=5000)
