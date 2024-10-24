@@ -54,14 +54,20 @@ function createNote(noteId, userId, xPos, yPos, innerText, color, urlId) {
     const stickyDiv = document.createElement('div');
     const stickyHeaderDiv = document.createElement('div');
     const stickyText = document.createElement('textarea');
-    const lineBreak = document.createElement('br');
-    const stickyDelDiv = document.createElement('nb');
-
+    const stickyDelDiv = document.createElement('img');
+    const stickyButtonsDiv = document.createElement('div');
+    const checkmark = document.createElement('img');
+    const checkmarkDiv = document.createElement('div');
+    const placeholderDiv = document.createElement('div');
     //header div and paragraph become children of stickyDiv
     stickyDiv.appendChild(stickyHeaderDiv);
     stickyDiv.appendChild(stickyText);
     //stickyDiv.appendChild(lineBreak);
-    stickyDiv.appendChild(stickyDelDiv);
+    stickyButtonsDiv.appendChild(placeholderDiv);
+    stickyButtonsDiv.appendChild(stickyDelDiv);
+    stickyButtonsDiv.appendChild(checkmarkDiv);
+    checkmarkDiv.appendChild(checkmark);
+    stickyDiv.appendChild(stickyButtonsDiv);
 
     //css styling for header div
     //stickyHeaderDiv.innerHTML = " - ";
@@ -97,12 +103,40 @@ function createNote(noteId, userId, xPos, yPos, innerText, color, urlId) {
     stickyDiv.style.paddingBottom = 0;
 
     //css styling for delete div
-    stickyDelDiv.innerText = "X";
+    stickyDelDiv.src = chrome.runtime.getURL("./images/deleteButton.svg");
     stickyDelDiv.style.color = "rgb(255,0,0)";
     stickyDelDiv.style.cursor = "pointer";
-    stickyDelDiv.style.maxWidth = "10px";
+    stickyDelDiv.style.maxWidth = "20px";
+    stickyDelDiv.style.padding = "2.5px";
     stickyDelDiv.style.marginLeft = "auto";
     stickyDelDiv.style.marginRight = "auto";
+    stickyDelDiv.style.flexGrow = "1";
+    stickyDelDiv.style.borderRadius = "5px"
+    stickyDelDiv.style.backgroundColor = "rgb(255,0,0,0.5)";
+
+    //css styling for placeholder div
+    placeholderDiv.style.width = "25px";
+
+    //css styling for checkmark
+    checkmark.src = chrome.runtime.getURL("./images/checkmark.svg");
+    checkmark.style.height = "25px";
+    checkmark.style.width = "25px";
+    checkmark.style.display = "none";
+    checkmark.style.cursor = "pointer";
+    checkmark.style.backgroundColor = "rgb(0,255,0,0.5)"
+    checkmark.style.borderRadius = "5px";
+
+    //css styling for checkmarkDiv
+    checkmarkDiv.style.width = "25px";
+    checkmarkDiv.style.height = "25px";
+
+    //css styling for stickyButtonsDiv
+    stickyButtonsDiv.style.display = "flex";
+    stickyButtonsDiv.style.flexWrap = "no wrap";
+    stickyButtonsDiv.style.alignItems = "center";
+    stickyButtonsDiv.style.paddingBottom = "3px";
+    stickyButtonsDiv.style.paddingTop = "3px";
+
 
     //css styling for sticky paragraph
     stickyText.classList = ["stickyText"];
@@ -204,8 +238,9 @@ function dragElement(elmnt) {
         // otherwise, move the DIV from anywhere inside the DIV:
         elmnt.onmousedown = dragMouseDown;
     }
-    elmnt.children[elmnt.children.length - 1].onmousedown = deleteNote;
-    elmnt.children[1].oninput = updateText;
+    elmnt.children[elmnt.children.length - 1].children[1].onmousedown = deleteNote;
+    elmnt.children[elmnt.children.length - 1].children[2].onmousedown = updateText;
+    elmnt.children[1].oninput = toggleCheckmarkOn;
 
     function dragMouseDown(e) {
         e = e || window.event;
@@ -281,9 +316,26 @@ function dragElement(elmnt) {
         }
         //save sticky notes
         saveNotes();
+        toggleCheckmarkOff();
 
     }
+
+    function toggleCheckmarkOn()
+       {
+        elmnt.children[1].style.height = "auto";
+        elmnt.children[1].style.height = `${elmnt.children[1].scrollHeight}px`;
+        elmnt.children[elmnt.children.length - 1].children[2].children[0].style.display = "block";
+       }
+
+    function toggleCheckmarkOff()
+       {
+        elmnt.children[1].style.height = "auto";
+        elmnt.children[1].style.height = `${elmnt.children[1].scrollHeight}px`;
+        elmnt.children[elmnt.children.length - 1].children[2].children[0].style.display = "none";
+       }
 }
+
+
 
 function saveNotes()
     {
@@ -310,7 +362,7 @@ function displayNotes()
    }
 
     //deleteNoteInServer: sends deleted note to the server to be removed from the SQL databse
-    async function deleteNoteInServer(index)
+async function deleteNoteInServer(index)
     {
         console.log("sending note to server...");
         try
@@ -342,7 +394,7 @@ function displayNotes()
     }
 
     //updateNoteInServer: sends modified note to the server to be modified in the SQL database
-    async function updateNoteInServer(index)
+async function updateNoteInServer(index)
     {
         console.log("sending note to server...");
         try
@@ -374,7 +426,7 @@ function displayNotes()
     }
 
     //getNotesFromServer: Gets all notes from a given URL and adds them to the list of notes
-    async function getNotesFromServer()
+async function getNotesFromServer()
     {
         console.log("fetching notes from server...");
         try
@@ -428,7 +480,7 @@ function displayNotes()
     }
 
     //sendNewNoteToServer: Sends request for new note to the server
-    async function getNewNoteFromServer()
+async function getNewNoteFromServer()
     {
     console.log("Getting new note from server...");
     try
