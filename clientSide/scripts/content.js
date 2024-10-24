@@ -2,9 +2,7 @@
 var urlString;
 const pageBody = document.body;
 var stickyNotes = [];
-var stickyCount = 0;
-var uniqueStickyId = 0;
-
+var currentUserID = 1;
 
 //initWebPage: creates webpage note that tells the user
 //  the webpage is audited by WebNotes
@@ -15,9 +13,9 @@ function initWebPage() {
         //set global URL variable
         urlString = result;
         console.log(urlString);
-        getNewId();
-        loadNotes();
-        getNewId();
+        clearNotes();
+        getNotesFromServer();
+        displayNotes();
     });
 
 
@@ -37,7 +35,7 @@ function initWebPage() {
     menuItem.style.height = "62.59px";
     menuItem.style.objectFit = "contain";
     menuItem.style.cursor = "pointer";
-    menuItem.onclick = createNewSticky;
+    menuItem.onclick = getNewNoteFromServer;
 }
 
 //getURL: sends a request to worker script for URL; returns the promise of the request
@@ -50,7 +48,7 @@ function getURL() {
 }
 
 //function that is responsible for creating a new note
-function createNote(xPos, yPos, innerText, color, noteId) {
+function createNote(noteId, userId, xPos, yPos, innerText, color, urlId) {
 
     //create div, header div, and paragraph elements for new note
     const stickyDiv = document.createElement('div');
@@ -81,6 +79,8 @@ function createNote(xPos, yPos, innerText, color, noteId) {
     stickyDiv.style.textAlign = "center";
     stickyDiv.classList = ["stickyDiv"];
     stickyDiv.id = noteId;
+    stickyDiv.user = userId;
+    stickyDiv.url = urlId;
     stickyDiv.style.position = "absolute";
     stickyDiv.style.left = xPos;
     stickyDiv.style.top = yPos;
@@ -139,7 +139,7 @@ chrome.runtime.onMessage.addListener(
         //read the message
         if (message.message == "createNote") {
             //create new note
-            createNewSticky();
+            getNewNoteFromServer();
         }
         if(message.message == "clearNotes")
         {
@@ -153,44 +153,20 @@ chrome.runtime.onMessage.addListener(
 );
 
 
-function createNewSticky()
+function createNewSticky(newSticky)
    {
     //create new note
-    let newSticky = { "xPos": 300, "yPos": 300 + window.scrollY, "innerText": "", color: "rgb(255,255,0,0.8)", id: uniqueStickyId };
-    stickyCount = stickyNotes.push(newSticky);
-    console.log("New sticky: "+uniqueStickyId);
-    createNote(newSticky.xPos + "px", newSticky.yPos + "px", newSticky.innerText, newSticky.color, newSticky.id);
+    stickyNotes.push(newSticky);
+    createNote(newSticky.id, newSticky.user, newSticky.xPos + "px", newSticky.yPos + "px", newSticky.innerText, newSticky.color, newSticky.url);
     //update drag functionality for each note
     updateDrag();
-
-    getNewId();
    }
 
-//get lowest unique id
-function getNewId()
-   {
-    for (let i = 0; i < stickyNotes.length+1; i++) {
-        let found = false;
-        for (let j = 0; j < stickyNotes.length; j++) {
-            if (stickyNotes[j].id == i) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            uniqueStickyId = i;
-            break;
-        }
-
-    }
-   }
-
-//clearNotes: clears stickyNote array, resets id, removes each element from DOM, and save
+//clearNotes: clears stickyNote array, removes each element from DOC, and save
 function clearNotes()
    {
     //reset array and id
     stickyNotes = [];
-    uniqueStickyId = 0;
 
     //prime loop with stickies to clear
     let stickiesToClear = document.getElementsByClassName("stickyDiv");
@@ -200,11 +176,10 @@ function clearNotes()
     while(numStickiesToClear != 0)
     {
         //remove sticky
-        document.body.removeChild(stickiesToClear[0]);
+        document.body.removeChild(stickiesToClear[numStickiesToClear-1]);
 
         //reprime loop
-        stickiesToClear = document.getElementsByClassName("stickyDiv");
-        numStickiesToClear = stickiesToClear.length;
+        numStickiesToClear--;
     }
     //save notes
     saveNotes();
@@ -270,10 +245,11 @@ function dragElement(elmnt) {
             if (stickyNotes[i].id == elmnt.id) {
                 stickyNotes[i].xPos = elmnt.style.left;
                 stickyNotes[i].yPos = elmnt.style.top;
+                //Update database
+                updateNoteInServer(i);
                 break;
             }
         }
-
         //save sticky notes
         saveNotes();
     }
@@ -281,16 +257,16 @@ function dragElement(elmnt) {
     function deleteNote() {
         for (let i = 0; i < stickyNotes.length; i++) {
             if (stickyNotes[i].id == elmnt.id) {
+                deleteNoteInServer(i);
                 pageBody.removeChild(elmnt);
                 stickyNotes.splice(i, 1);
-                stickyCount--;
-                getNewId();
                 break;
             }
         }
         //save sticky notes
         saveNotes();
     }
+
     function updateText()
         {
         elmnt.children[1].style.height = "auto";
@@ -298,6 +274,8 @@ function dragElement(elmnt) {
         for (let i = 0; i < stickyNotes.length; i++) {
             if (stickyNotes[i].id == elmnt.id) {
                 stickyNotes[i].innerText = elmnt.children[1].value;
+                //Update database
+                updateNoteInServer(i);
                 break;
             }
         }
@@ -305,19 +283,15 @@ function dragElement(elmnt) {
         saveNotes();
 
     }
-
-    
-
 }
 
 function saveNotes()
-       {
-        localStorage.setItem(urlString+"stickyData", JSON.stringify(stickyNotes));
-        console.log("notes saved!");
-        sendNotesToServer();
-       }
+    {
+    localStorage.setItem(urlString+"stickyData", JSON.stringify(stickyNotes));
+    console.log("notes saved!");
+    }
 
-function loadNotes()
+function displayNotes()
    {
     console.log(urlString+"/stickyData");
     let stickyData = localStorage.getItem(urlString+"stickyData");
@@ -325,7 +299,6 @@ function loadNotes()
     {
         console.log("loading notes");
         stickyNotes = JSON.parse(stickyData);
-        stickyCount = stickyNotes.length;
         for(let i = 0; i < stickyNotes.length; i++)
         {
             createNote(stickyNotes[i].xPos, stickyNotes[i].yPos, stickyNotes[i].innerText, stickyNotes[i].color, stickyNotes[i].id);
@@ -333,40 +306,164 @@ function loadNotes()
         console.log(stickyNotes);
         //update drag functionality for each note
         updateDrag();
-        
     }
    }
 
-//sendNotesToServer: sends current note array to server
-async function sendNotesToServer()
-   {
-    console.log("sending notes to server...");
-    try
-       {
-        //send post request with fetch
-        const response = await fetch("http://127.0.0.1:5000/sendNotes", 
-           {
-            method: "POST",
-            body: JSON.stringify(stickyNotes),
-            headers: {
-            "Content-type": "application/json; charset=UTF-8",
-            "Access-Control-Allow-Origin": "*"
+    //deleteNoteInServer: sends deleted note to the server to be removed from the SQL databse
+    async function deleteNoteInServer(index)
+    {
+        console.log("sending note to server...");
+        try
+        {
+            //send post request with fetch
+            const response = await fetch("http://127.0.0.1:5000/deleteNote", 
+            {
+                method: "POST",
+                body: JSON.stringify(stickyNotes[index]),
+                headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                "Access-Control-Allow-Origin": "*"
+                }
+            })
+
+            //check response intergrity
+            if(!response.ok)
+            {
+                throw new Error('Response status: ${reponse.status}');
             }
-           })
+            //display response
+            console.log(await response.json())
+        }
+        //if server is unreachable catch error and print
+        catch(error)
+        {
+            console.log(error.message)
+        }
+    }
+
+    //updateNoteInServer: sends modified note to the server to be modified in the SQL database
+    async function updateNoteInServer(index)
+    {
+        console.log("sending note to server...");
+        try
+        {
+            //send post request with fetch
+            const response = await fetch("http://127.0.0.1:5000/updateNote", 
+            {
+                method: "POST",
+                body: JSON.stringify(stickyNotes[index]),
+                headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                "Access-Control-Allow-Origin": "*"
+                }
+            })
+
+            //check response intergrity
+            if(!response.ok)
+            {
+                throw new Error('Response status: ${reponse.status}');
+            }
+            //display response
+            console.log(await response.json())
+        }
+        //if server is unreachable catch error and print
+        catch(error)
+        {
+            console.log(error.message)
+        }
+    }
+
+    //getNotesFromServer: Gets all notes from a given URL and adds them to the list of notes
+    async function getNotesFromServer()
+    {
+        console.log("fetching notes from server...");
+        try
+        {
+            //send get request with fetch
+            const response = await fetch("http://127.0.0.1:5000/getNotes", 
+            {
+                method: "POST",
+                body: JSON.stringify({"url": urlString}),
+                headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                "Access-Control-Allow-Origin": "*"
+                }
+            })
+
+            //check response intergrity
+            if(!response.ok)
+            {
+                throw new Error('Response status: ${reponse.status}');
+            }
+            //Create new notes and add them to display
+
+            //parse notes
+            let notes = await response.json();
+            //check if there is only one note
+            if(!Array.isArray(notes[0]))
+            {
+                let newSticky = {id: notes[0], user: notes[1], xPos: notes[2], yPos: notes[3],
+                                 innerText: notes[4], color: notes[5], url: notes[6]};
+                createNewSticky(newSticky);
+            } 
+
+            else
+            {
+                notes.forEach(makeNewNote);
+
+                function makeNewNote(note)
+                {
+                    let newSticky = {id: note[0], user: note[1], xPos: note[2], yPos: note[3],
+                        innerText: note[4], color: note[5], url: note[6]};
+                    createNewSticky(newSticky);
+                }
+            }
+            
+        }
+        //if server is unreachable catch error and print
+        catch(error)
+        {
+            console.log(error.message)
+        }
+    }
+
+    //sendNewNoteToServer: Sends request for new note to the server
+    async function getNewNoteFromServer()
+    {
+    console.log("Getting new note from server...");
+    try
+        {
+        //send post request with fetch
+        const response = await fetch("http://127.0.0.1:5000/newNote", 
+            {
+                method: "POST",
+                body: JSON.stringify({"user": currentUserID,
+                       "scrollHeight": window.scrollY,
+                       "url": urlString}),
+                headers: {
+                "Content-type": "application/json; charset=UTF-8",
+                "Access-Control-Allow-Origin": "*"
+                }
+            })
 
         //check response intergrity
         if(!response.ok)
-           {
+            {
             throw new Error('Response status: ${reponse.status}');
-           }
-        //display response
-        console.log(await response.json())
-       }
+            }
+        //parse note
+        let note = await response.json();
+
+        let newSticky = {id: note[0], user: note[1], xPos: note[2], yPos: note[3],
+            innerText: note[4], color: note[5], url: note[6]};
+        createNewSticky(newSticky);
+
+        }
     //if server is unreachable catch error and print
     catch(error)
-       {
+        {
         console.log(error.message)
-       }
-   }
-
+        }
+    }
+    
 initWebPage();
