@@ -146,7 +146,11 @@ chrome.runtime.onMessage.addListener(
             console.log("clear!!");
             clearNotes();
         }
-
+        // Check if the message is for searching notes
+        if (message.message == "searchNotes") {
+            console.log("Search term received:", message.searchTerm);
+            searchNotes(message.searchTerm);
+        }
         //awknowledge message recieved
         sendResponse({ message: "Recieved message" });
     }
@@ -210,6 +214,39 @@ function clearNotes()
     saveNotes();
    }
 
+function searchNotes(searchTerm)
+{
+    console.log("Searching for:", searchTerm);
+
+    // Clear previous search highlights
+    clearSearchHighlights();
+
+    // Find matching notes
+    const matchingNotes = stickyNotes.filter(note => note.innerText.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    // Print matching notes to console
+    if (matchingNotes.length > 0) {
+        console.log("Matching notes found:", matchingNotes);
+        
+        // Highlight matching notes
+        matchingNotes.forEach(note => {
+            const noteElement = document.getElementById(note.id);
+            if (noteElement) {
+                noteElement.style.border = "2px solid green"; // Highlight with a green border
+            }
+        });
+    } else {
+        console.log("No matching notes found.");
+    }
+}
+function clearSearchHighlights() {
+    stickyNotes.forEach(note => {
+        const noteElement = document.getElementById(note.id);
+        if (noteElement) {
+            noteElement.style.border = ""; // Remove any highlighting
+        }
+    });
+}
 //DRAGABLE CODE:
 
 //updates drag for all notes with class "stickyDiv"
