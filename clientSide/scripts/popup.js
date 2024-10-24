@@ -35,11 +35,29 @@ function clearNotes()
            }
        });
    }
+   function searchNotes() {
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    
+    // Send search term to the content script
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        if (tabs.length > 0 && tabs[0].url.includes("canvas.nau.edu")) {
+            chrome.tabs.sendMessage(tabs[0].id, {message: "searchNotes", searchTerm: searchTerm}, function(response) {
+                if (response) {
+                    console.log(response.message);
+                }
+            });
+        }
+    });
+}
 
-//add event listener to Create Note button
-document.getElementById("noteBtn").addEventListener("click", createNote);
+// Add the DOMContentLoaded event listener
+document.addEventListener("DOMContentLoaded", function() {
+    // Add event listeners
+    document.getElementById("noteBtn").addEventListener("click", createNote);
+    document.getElementById("clearBtn").addEventListener("click", clearNotes);
+    document.getElementById("searchBtn").addEventListener("click", searchNotes);
 
-document.getElementById("clearBtn").addEventListener("click", clearNotes);
-
+    // Other initializations...
+});
 
 //https://stackoverflow.com/questions/45179138/sending-message-from-popup-to-content-script-chrome-extension
