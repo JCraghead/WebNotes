@@ -35,7 +35,8 @@ function clearNotes()
            }
        });
    }
-   function searchNotes() {
+
+function searchNotes() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
     
     // Send search term to the content script
@@ -50,12 +51,19 @@ function clearNotes()
     });
 }
 
+function clearSearchBox()
+   {
+    document.getElementById("searchInput").value = "";
+    searchNotes();
+   }
+
 // Add the DOMContentLoaded event listener
 document.addEventListener("DOMContentLoaded", function() {
     // Add event listeners
     document.getElementById("noteBtn").addEventListener("click", createNote);
     document.getElementById("clearBtn").addEventListener("click", clearNotes);
-    document.getElementById("searchBtn").addEventListener("click", searchNotes);
+    document.getElementById("searchInput").addEventListener("input", searchNotes)
+    document.getElementById("clearText").addEventListener("click", clearSearchBox)
 
     // Other initializations...
 });

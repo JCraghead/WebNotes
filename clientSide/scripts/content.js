@@ -231,10 +231,13 @@ function searchNotes(searchTerm)
     clearSearchHighlights();
 
     // Find matching notes
-    const matchingNotes = stickyNotes.filter(note => note.innerText.toLowerCase().includes(searchTerm.toLowerCase()));
-
+    let matchingNotes = [];
+    if(stickyNotes.length > 0)
+       {
+        matchingNotes = stickyNotes.filter(note => note.innerText.toLowerCase().includes(searchTerm.toLowerCase()));
+       }
     // Print matching notes to console
-    if (matchingNotes.length > 0) {
+    if (matchingNotes.length > 0 && searchTerm != "") {
         console.log("Matching notes found:", matchingNotes);
         
         // Highlight matching notes
@@ -489,19 +492,13 @@ async function getNotesFromServer()
             //parse notes
             let notes = await response.json();
             //check if there is only one note
-            if(!Array.isArray(notes[0]))
-            {
-                let newSticky = {id: notes[0], user: notes[1], xPos: notes[2], yPos: notes[3],
-                                 innerText: notes[4], color: notes[5], url: notes[6]};
-                createNewSticky(newSticky);
-            } 
-
-            else
+            if(notes.length > 0)
             {
                 notes.forEach(makeNewNote);
 
                 function makeNewNote(note)
                 {
+                    console.log("many stick");
                     let newSticky = {id: note[0], user: note[1], xPos: note[2], yPos: note[3],
                         innerText: note[4], color: note[5], url: note[6]};
                     createNewSticky(newSticky);
