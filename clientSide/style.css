@@ -13,3 +13,24 @@ a:visited
     flex-direction: column;
     align-items: center;
 }
+
+#searchDiv{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+input{
+    max-width: 60%;
+}
+
+#clearText{
+    height: 25px;
+    width: 25px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+#clearText:hover{
+    background-color:red;
+}
