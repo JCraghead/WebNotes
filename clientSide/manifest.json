@@ -26,7 +26,7 @@
     } 
   ],
   "web_accessible_resources": [
-    {"resources":["images/logo_full_text.svg"],
+    {"resources":["images/logo_full_text.svg", "images/checkmark.svg", "images/deleteButton.svg"],
     "matches":["https://canvas.nau.edu/*"]
     }]
 
