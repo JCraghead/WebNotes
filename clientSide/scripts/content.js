@@ -1,3 +1,6 @@
+//SERVER CONFIG: set to "https://52.53.130.84:443" for remote server, "http://127.0.0.1:5000" for local server
+const remoteServer = "https://52.53.130.84:443";
+
 //declare global variables
 var urlString;
 const pageBody = document.body;
@@ -408,7 +411,7 @@ async function deleteNoteInServer(index)
         try
         {
             //send post request with fetch
-            const response = await fetch("http://127.0.0.1:5000/deleteNote", 
+            const response = await fetch(remoteServer+"/deleteNote", 
             {
                 method: "POST",
                 body: JSON.stringify(stickyNotes[index]),
@@ -440,7 +443,7 @@ async function updateNoteInServer(index)
         try
         {
             //send post request with fetch
-            const response = await fetch("http://127.0.0.1:5000/updateNote", 
+            const response = await fetch(remoteServer+"/updateNote", 
             {
                 method: "POST",
                 body: JSON.stringify(stickyNotes[index]),
@@ -472,7 +475,7 @@ async function getNotesFromServer()
         try
         {
             //send get request with fetch
-            const response = await fetch("http://127.0.0.1:5000/getNotes", 
+            const response = await fetch(remoteServer+"/getNotes", 
             {
                 method: "POST",
                 body: JSON.stringify({"url": urlString}),
@@ -520,7 +523,7 @@ async function getNewNoteFromServer()
     try
         {
         //send post request with fetch
-        const response = await fetch("http://127.0.0.1:5000/newNote", 
+        const response = await fetch(remoteServer+"/newNote", 
             {
                 method: "POST",
                 body: JSON.stringify({"user": currentUserID,
