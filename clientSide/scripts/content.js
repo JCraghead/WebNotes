@@ -1,5 +1,5 @@
-//SERVER CONFIG: set to "https://52.53.130.84:443" for remote server, "http://127.0.0.1:5000" for local server
-const remoteServer = "https://52.53.130.84:443";
+//SERVER CONFIG: set to "https://webnotes.space:443" for remote server, "http://127.0.0.1:5000" for local server
+const remoteServer = "https://webnotes.space:443";
 
 //declare global variables
 var urlString;
