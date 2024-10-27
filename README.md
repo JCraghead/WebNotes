@@ -7,7 +7,7 @@ Web Notes is a simple Chrome extension note-taking software that will allow user
 
 ## Status
 
-Web Notes is currently in the early stages of development. Please contact the developers for any information.
+Web Notes is currently available on [Chrome Web store](https://webnotes.space/). Please contact the developers for any information.
 
 ## Development setup
 
@@ -20,20 +20,38 @@ These instructions will get you a copy of the project up and running on your loc
 ## Prerequisites
 
 Git\
-Github\
-Visual Studio Code \
-Installing
+Flask\
+Flask-Cors\
+MySql-Connector\
+Credentials
 
-A step-by-step series of examples that tell you how to get a development env running.
+### Installing
+
+1. Fork the [repository](https://chromewebstore.google.com/detail/webnotes/dbeikfpfmondbdicbmmfcnmbidhphboo?hl=en-US&utm_source=ext_sidebar), then clone to your local machine.
+2. Make sure you have the developer mode turned on in Google extensions.
+3. Choose the "Load Unpacked" option.
+4. Select the "ClientSide" Folder from our downloaded repository. 
+5. Refresh Google Chrome and WebNotes should be ready to use on the extension shortcut on the Google Chrome homepage.
+
+A step-by-step series of examples that tell you how to get a development environment running.
+
+
+## Deployment
+
+For WebNotes, the deployment utilizes a Flask server hosted on an AWS EC2 instance, where Nginx and Gunicorn establish a reverse proxy to direct requests to the internal Flask application. This setup enhances scalability and performance, ensuring seamless access. The WebNotes Chrome extension is available at [webnotes.space](https://webnotes.space/) and on the Google Chrome Store, providing users with an easy and accessible note-taking tool.
 
 
 # Developers
 
-- [@Landon](https://github.com/PequenoCoder)
-- [@Lucas](https://github.com/lucaslarson25)
-- [@Avnish](https://github.com/avnishsinha)
-- [@Jarom](https://github.com/JCraghead)
-- [@Ronan](https://github.com/uploading3211)
+* **Landon** - *Initial work* - [PequenoCoder](https://github.com/PequenoCoder)
+* **Lucas** - *Initial work* - [lucaslarson25](https://github.com/lucaslarson25)
+* **Avnish** - *Initial work* - [avnishsinha](https://github.com/avnishsinha)
+* **Jarom** - *Initial work* - [JCraghead](https://github.com/JCraghead)
+* **Ronan** - *Initial work* - [uploading3211](https://github.com/uploading3211)
+
+## Contributing
+
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
 
 ## License
 
