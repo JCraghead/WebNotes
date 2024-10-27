@@ -1,11 +1,12 @@
 //SERVER CONFIG: set to "https://52.53.130.84:443" for remote server, "http://127.0.0.1:5000" for local server
-const remoteServer = "https://52.53.130.84:443";
+const remoteServer = "https://webnotes.space:443";
 
 //declare global variables
 var urlString;
 const pageBody = document.body;
 var stickyNotes = [];
 var currentUserID = 1;
+let isDarkMode = false;
 
 //initWebPage: creates webpage note that tells the user
 //  the webpage is audited by WebNotes
@@ -93,7 +94,7 @@ function createNote(noteId, userId, xPos, yPos, innerText, color, urlId) {
     stickyDiv.style.position = "absolute";
     stickyDiv.style.left = xPos;
     stickyDiv.style.top = yPos;
-    stickyDiv.style.backgroundColor = color;
+    stickyDiv.style.backgroundColor = isDarkMode ? 'rgb(47,55,107)' : color;
     stickyDiv.style.zIndex = 10;
     stickyDiv.style.padding = "10px";
     stickyDiv.style.maxWidth = "500px";
@@ -143,7 +144,7 @@ function createNote(noteId, userId, xPos, yPos, innerText, color, urlId) {
 
     //css styling for sticky paragraph
     stickyText.classList = ["stickyText"];
-    stickyText.style.color = 'rgb(0,0,0)';
+    stickyText.style.color = isDarkMode ? 'rgb(255,255,255)' : 'rgb(0,0,0)'; 
 
     if(innerText == "")
     {
@@ -187,6 +188,10 @@ chrome.runtime.onMessage.addListener(
         if (message.message == "searchNotes") {
             console.log("Search term received:", message.searchTerm);
             searchNotes(message.searchTerm);
+        }
+        if (message.message == "toggleDarkMode") {
+            console.log("changing theme");
+            toggleDarkMode();
         }
         //awknowledge message recieved
         sendResponse({ message: "Recieved message" });
@@ -262,6 +267,26 @@ function clearSearchHighlights() {
         }
     });
 }
+function toggleDarkMode(){
+    stickyNotes.forEach(note => {
+        const noteElement = document.getElementById(note.id);
+        if (noteElement) {
+            const textElement = noteElement.querySelector('.stickyText');
+            if (!isDarkMode) {
+                noteElement.style.backgroundColor = 'rgb(47,55,107)';
+                textElement.style.color = 'rgb(255,255,255)';
+                console.log("switching to dark");
+            } else {
+                noteElement.style.backgroundColor = 'rgb(255,255,0,0.8)';
+                textElement.style.color = 'rgb(0,0,0)';
+                console.log("switching to light");
+            }
+        }
+    });
+    isDarkMode = !isDarkMode;
+}
+
+
 //DRAGABLE CODE:
 
 //updates drag for all notes with class "stickyDiv"
