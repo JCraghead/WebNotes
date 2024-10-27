@@ -25,7 +25,7 @@ All types of contributions are encouraged and valued. See the [Readme.md](https:
 This project and everyone participating in it is governed by the
 [WebNotes Code of Conduct](https://github.com/JCraghead/WebNotesblob/master/CODE_OF_CONDUCT.md).
 By participating, you are expected to uphold this code. Please report unacceptable behavior
-to <aks526@nau.edu>.
+to <jc4885@nau.edu>.
 
 
 ## I Have a Question
