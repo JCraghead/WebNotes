@@ -76,3 +76,10 @@ test('Try getting new note from server with getNewNoteFromServer()', async () =>
     await content.getNewNoteFromServer();
     content.clearNotes();
 });
+
+test('Try getting toggle dark mode with toggleDarkMode()', () => {
+    content.createNewSticky({id:1, user:0, xPos:300, yPos:300, innerText:"search notes", color:"rgb(0,0,0)", url:"test.com"});
+    expect(document.getElementById(1).style.backgroundColor).toBe("rgb(0, 0, 0)");
+    content.toggleDarkMode();
+    expect(document.getElementById(1).style.backgroundColor).toBe("rgb(47, 55, 107)");
+});
