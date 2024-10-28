@@ -91,9 +91,8 @@
 # **Tests**  
 1. The test framework we chose to use is Jest. Using Jest allows us to test our scripts which use DOM functions by creating mock functions and using node packages such as JSDOM and Isomorphic-Fetch.  
 2. Link to tests on GitHub: \[link to github tests\]  
-3. **Example Test: searchNotes** The test for searchNotes goes as follows: First, we create two new sticky notes with id’s one and two and assign them the innerText’s “search notes” and “secret note” respectively. We check to see that both of them are not highlighted. Then, by searching for “notes” we check to see if the first element is highlighted and the second is not. We search “note” next to see if both elements are highlighted. Finally, we search “secret” to ensure that only the second element is highlighted. We then clear the created notes before ending the test.
-
-   \[link to content.js:searchNotes\]\[link to content.test.js\].
+3. **Example Test: searchNotes** The test for searchNotes goes as follows: First, we create two new sticky notes with id’s one and two and assign them the innerText’s “search notes” and “secret note” respectively. We check to see that both of them are not highlighted. Then, by searching for “notes” we check to see if the first element is highlighted and the second is not. We search “note” next to see if both elements are highlighted. Finally, we search “secret” to ensure that only the second element is highlighted. We then clear the created notes before ending the test.\
+[Link to searchNotes](https://github.com/JCraghead/WebNotes/blob/main/clientSide/scripts/content.js) -  [Link to searchNotes' test](https://github.com/JCraghead/WebNotes/blob/main/testing/content.test.js)
 
 ![](/markdownImages/d4_14.png)
 

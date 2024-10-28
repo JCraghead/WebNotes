@@ -1,5 +1,5 @@
 
-# WebNotes
+# WebNotes Version 1.2.0
 
 WebNotes is a group project that has been started for our CS 386 class and will continue development till the end of Fall 2024. The existing codebase, with limited functionality, remains available under an MIT license. Please proceed at your own risk. 
 
@@ -7,12 +7,12 @@ Web Notes is a simple Chrome extension note-taking software that will allow user
 
 ## Status
 
-Web Notes is currently available on [Chrome Web store](https://webnotes.space/). Please contact the developers for any information.
+Web Notes is currently available on the Chrome Web store and can be found at our website [WebNotes.space](https://webnotes.space/). Please contact the developers for any information.
 
 ## Development setup
 
 WebNotes uses a Chrome extension for client-side operations. As of now this is an unpacked extension and must be loaded in developer mode on Google Chrome. Future releases will provide the packed version available on the Chrome Store.
-Our server runs on Python using Flask and Flask-Cors, both of which are required to be installed in order for the server to function.
+Our local development server runs on Python using Flask and Flask-Cors, both of which are required to be installed in order for the server to function.
 
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
@@ -31,9 +31,9 @@ Credentials
 2. Make sure you have the developer mode turned on in Google extensions.
 3. Choose the "Load Unpacked" option.
 4. Select the "ClientSide" Folder from our downloaded repository. 
-5. Refresh Google Chrome and WebNotes should be ready to use on the extension shortcut on the Google Chrome homepage.
+5. (Optional) Start the local Flask server and set "remoteServer" variable in content.js to its corresponding address.
+6. Refresh Google Chrome and WebNotes should be ready to use on the extension shortcut on the Google Chrome homepage.
 
-A step-by-step series of examples that tell you how to get a development environment running.
 
 
 ## Deployment
