@@ -107,7 +107,7 @@
 2. Jarom learned about SQL in his CS345 class, using that to build onto Lucas’s work and merge the two ends of the system via Python.  
 3. Avnish managed the GitHub Documentation like making CONTRIBUTING.md, code\_of\_conduct.md, and Readme.md as well. Also responsible for Licensing the project.   
 4. Ronan has been learning Javascript and how to use Git properly as formerly has had little to no experience with either.   
-5. Landon learned about the interactions between SQL and our python server.
+5. Landon while developing the search feature, learned how to efficiently query SQL to retrieve notes based on user input and highlight relevant results in the UI. This experience emphasized the importance of thorough testing and clear documentation to ensure everything functioned smoothly.
 
 # **Deployment**  
   [**https://www.webnotes.space/**](https://www.webnotes.space/)  
