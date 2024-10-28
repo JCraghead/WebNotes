@@ -14,16 +14,16 @@ All types of contributions are encouraged and valued. See the [Readme.md](https:
 <!-- omit in toc -->
 ## Table of Contents
 
-- [Code of Conduct](https://github.com/JCraghead/WebNotes/blob/main/CODE_OF_CONDUCT.md)
-- [I Have a Question](https://github.com/JCraghead/WebNotes/new/main#i-have-a-question)
-- [I Want To Contribute](#i-want-to-contribute)
-  - [Reporting Bugs](https://github.com/JCraghead/WebNotes/issues)
-  - [Suggesting Enhancements](#suggesting-enhancements)
+- Code of Conduct
+- I Have a Question
+- I Want To Contribute
+  - Reporting Bugs
+  - Suggesting Enhancements
 
 ## Code of Conduct
 
 This project and everyone participating in it is governed by the
-[WebNotes Code of Conduct](https://github.com/JCraghead/WebNotesblob/master/CODE_OF_CONDUCT.md).
+[WebNotes Code of Conduct](https://github.com/JCraghead/WebNotes/blob/main/CODE_OF_CONDUCT.md).
 By participating, you are expected to uphold this code. Please report unacceptable behavior
 to <jc4885@nau.edu>.
 
