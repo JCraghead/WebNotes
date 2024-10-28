@@ -18,7 +18,7 @@ function initWebPage() {
         urlString = result;
         console.log(urlString);
         clearNotes();
-        getNotesFromServer();
+        getNotesFromServer(urlString);
         displayNotes();
     });
 
@@ -46,8 +46,11 @@ function initWebPage() {
 function getURL() {
     return (async () => {
         const response = await chrome.runtime.sendMessage({ message: "getURL" });
-        console.log("Received URL from service worker: " + response.URL);
-        return response.URL;
+        if(response)
+           {
+            console.log("Received URL from service worker: " + response.URL);
+            return response.URL;
+           }
     })();
 }
 
@@ -494,7 +497,7 @@ async function updateNoteInServer(index)
     }
 
     //getNotesFromServer: Gets all notes from a given URL and adds them to the list of notes
-async function getNotesFromServer()
+async function getNotesFromServer(url)
     {
         console.log("fetching notes from server...");
         try
@@ -503,7 +506,7 @@ async function getNotesFromServer()
             const response = await fetch(remoteServer+"/getNotes", 
             {
                 method: "POST",
-                body: JSON.stringify({"url": urlString}),
+                body: JSON.stringify({"url": url}),
                 headers: {
                 "Content-type": "application/json; charset=UTF-8",
                 "Access-Control-Allow-Origin": "*"
@@ -513,7 +516,7 @@ async function getNotesFromServer()
             //check response intergrity
             if(!response.ok)
             {
-                throw new Error('Response status: ${reponse.status}');
+                throw new Error('Response status:'+ response.status);
             }
             //Create new notes and add them to display
 
@@ -578,6 +581,19 @@ async function getNewNoteFromServer()
         {
         console.log(error.message)
         }
-    }
-    
+    }  
+
 initWebPage();
+
+//try to export functions
+try
+   {
+    //export functions for unit testing
+    module.exports = {createNote, createNewSticky, clearNotes, searchNotes, clearSearchHighlights, 
+        deleteNoteInServer, updateNoteInServer, getNotesFromServer, getNewNoteFromServer, toggleDarkMode};
+   }
+catch(error)
+   {
+    //if this caused an error, testing is not occuring and it is running in browser
+    console.log("Could not export modules, runtime environment detected");
+   }
