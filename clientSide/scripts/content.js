@@ -15,7 +15,8 @@ function initWebPage() {
     let urlPromise = getURL();
     urlPromise.then(result => {
         //set global URL variable
-        urlString = result;
+        urlString = result.URL;
+        isDarkMode = result.darkMode;
         console.log(urlString);
         clearNotes();
         getNotesFromServer(urlString);
@@ -49,7 +50,7 @@ function getURL() {
         if(response)
            {
             console.log("Received URL from service worker: " + response.URL);
-            return response.URL;
+            return response;
            }
     })();
 }

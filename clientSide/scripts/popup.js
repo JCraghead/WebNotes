@@ -1,3 +1,5 @@
+var darkMode = false;
+
 //createNote: sends content script message to create new note
 function createNote()
    {
@@ -59,19 +61,33 @@ function clearSearchBox()
 
 //toggleDarkMdoe: sends message to toggle dark mode
 function toggleDarkMode() {
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-        //check if active tab is canvas
-        if(tabs.length > 0 && tabs[0].url.includes("canvas.nau.edu"))
-        {
-         //send message "toggleDarkMode"
-         chrome.tabs.sendMessage(tabs[0].id, {message:"toggleDarkMode"}, function(response){
-             //log response
-             if(response)
-             {
-              console.log(response.message);
-             }
-         });
-        }
+    //send message to worker script to update dark mode bool
+    (async () => {
+        const response = await chrome.runtime.sendMessage({ message: "updateDarkMode"});
+        if(response)
+           {
+            console.log("Received response from service worker: " + response.message);
+            darkMode = response.darkMode;
+           }
+    })();
+
+    chrome.tabs.query({}, function(tabs) {
+        //loop through all tabs
+        for(let tabIndex = 0; tabIndex < tabs.length; tabIndex++)
+           {
+            //if tab matches we send a message
+            if(tabs[tabIndex].url.includes("canvas.nau.edu"))
+            {
+            //send message "toggleDarkMode"
+            chrome.tabs.sendMessage(tabs[tabIndex].id, {message:"toggleDarkMode"}, function(response){
+                //log response
+                if(response)
+                {
+                console.log(response.message);
+                }
+            });
+            }
+           }
     });
 }
 
