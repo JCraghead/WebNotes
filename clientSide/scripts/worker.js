@@ -17,6 +17,12 @@ chrome.runtime.onMessage.addListener(
             sendResponse({message: "updated to "+darkMode, darkMode: darkMode});
             console.log("Send repsonse to popup script");
         }
+
+        if (request.message === "sendStatus") {
+            //send response to popup.js
+            sendResponse({message: "current status", darkMode: darkMode});
+            console.log("Sent status to popup.js");
+        }
     }
 );
 

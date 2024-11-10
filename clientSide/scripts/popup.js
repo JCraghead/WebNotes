@@ -1,4 +1,5 @@
 var darkMode = false;
+getStatus();
 
 //createNote: sends content script message to create new note
 function createNote()
@@ -68,6 +69,7 @@ function toggleDarkMode() {
            {
             console.log("Received response from service worker: " + response.message);
             darkMode = response.darkMode;
+            updateButtonText();
            }
     })();
 
@@ -89,11 +91,39 @@ function toggleDarkMode() {
             }
            }
     });
+
 }
+
+function getStatus() {
+    (async () => {
+        const response = await chrome.runtime.sendMessage({ message: "sendStatus"});
+        if(response)
+           {
+            console.log("Received response from service worker: " + response.darkMode);
+            darkMode = response.darkMode;
+            updateButtonText();
+           }
+    })();
+
+    
+}
+
+function updateButtonText() {
+    if(darkMode)
+        {
+         document.getElementById("darkModeBtn").innerHTML = "Light Mode";
+        }
+     else
+        {
+         document.getElementById("darkModeBtn").innerHTML = "Dark Mode";
+        }
+}
+
 
 // Add the DOMContentLoaded event listener
 document.addEventListener("DOMContentLoaded", function() {
     // Add event listeners
+    console.log("reloaded");
     document.getElementById("noteBtn").addEventListener("click", createNote);
     document.getElementById("clearBtn").addEventListener("click", clearNotes);
     document.getElementById("searchInput").addEventListener("input", searchNotes)
