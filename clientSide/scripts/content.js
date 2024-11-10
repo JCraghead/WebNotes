@@ -7,6 +7,7 @@ const pageBody = document.body;
 var stickyNotes = [];
 var currentUserID = 1;
 let isDarkMode = false;
+var noteMode = "public";
 
 //initWebPage: creates webpage note that tells the user
 //  the webpage is audited by WebNotes
@@ -17,6 +18,7 @@ function initWebPage() {
         //set global URL variable
         urlString = result.URL;
         isDarkMode = result.darkMode;
+        noteMode = result.noteMode;
         console.log(urlString);
         clearNotes();
         getNotesFromServer(urlString);
@@ -197,6 +199,11 @@ chrome.runtime.onMessage.addListener(
             console.log("changing theme");
             toggleDarkMode();
         }
+
+        if (message.message == "toggleNoteMode") {
+            console.log("changing note mode")
+            toggleNoteMode();
+        }
         //awknowledge message recieved
         sendResponse({ message: "Recieved message" });
     }
@@ -288,6 +295,10 @@ function toggleDarkMode(){
         }
     });
     isDarkMode = !isDarkMode;
+}
+
+function toggleNoteMode() {
+    //TODO
 }
 
 
