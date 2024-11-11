@@ -1,5 +1,5 @@
 
-# WebNotes Version 1.2.0
+# WebNotes Version 1.3.0
 
 WebNotes is a group project that has been started for our CS 386 class and will continue development till the end of Fall 2024. The existing codebase, with limited functionality, remains available under an MIT license. Please proceed at your own risk. 
 
