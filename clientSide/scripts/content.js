@@ -91,7 +91,7 @@ function createNote(noteId, userId, xPos, yPos, innerText, color, urlId, newNote
     //update color of header depending on the privacy of the note
     if(newNoteMode == "public")
        {
-        stickyHeaderDiv.style.backgroundColor = 'rgb(0,0,0,0.2)';
+        stickyHeaderDiv.style.backgroundColor = 'rgb(0,255,0,0.5)';
        }
     else
        {
