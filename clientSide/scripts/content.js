@@ -7,6 +7,8 @@ const pageBody = document.body;
 var stickyNotes = [];
 var currentUserID = 1;
 let isDarkMode = false;
+var noteMode = "public";
+var localNoteId = 1000;
 
 //initWebPage: creates webpage note that tells the user
 //  the webpage is audited by WebNotes
@@ -15,11 +17,12 @@ function initWebPage() {
     let urlPromise = getURL();
     urlPromise.then(result => {
         //set global URL variable
-        urlString = result;
+        urlString = result.URL;
+        isDarkMode = result.darkMode;
+        noteMode = result.noteMode;
         console.log(urlString);
-        clearNotes();
-        getNotesFromServer(urlString);
         displayNotes();
+        getNotesFromServer(urlString);
     });
 
 
@@ -39,7 +42,7 @@ function initWebPage() {
     menuItem.style.height = "62.59px";
     menuItem.style.objectFit = "contain";
     menuItem.style.cursor = "pointer";
-    menuItem.onclick = getNewNoteFromServer;
+    menuItem.onclick = addNewNoteWithMode;
 }
 
 //getURL: sends a request to worker script for URL; returns the promise of the request
@@ -49,13 +52,13 @@ function getURL() {
         if(response)
            {
             console.log("Received URL from service worker: " + response.URL);
-            return response.URL;
+            return response;
            }
     })();
 }
 
 //function that is responsible for creating a new note
-function createNote(noteId, userId, xPos, yPos, innerText, color, urlId) {
+function createNote(noteId, userId, xPos, yPos, innerText, color, urlId, newNoteMode) {
 
     //create div, header div, and paragraph elements for new note
     const stickyDiv = document.createElement('div');
@@ -80,13 +83,21 @@ function createNote(noteId, userId, xPos, yPos, innerText, color, urlId) {
     //stickyHeaderDiv.innerHTML = " - ";
     stickyHeaderDiv.style.height = "10px";
     stickyHeaderDiv.classList = ["stickyHeader"];
-    stickyHeaderDiv.style.backgroundColor = 'rgb(0,0,0,0.2)';
-    stickyHeaderDiv.style.color = 'rgb(255,255,255)';
     stickyHeaderDiv.style.cursor = 'grab';
     stickyHeaderDiv.style.minWidth = "100px";
     stickyHeaderDiv.style.marginLeft = "auto";
     stickyHeaderDiv.style.marginRight = "auto";
     stickyHeaderDiv.style.borderRadius = "5px";
+    //update color of header depending on the privacy of the note
+    if(newNoteMode == "public")
+       {
+        stickyHeaderDiv.style.backgroundColor = 'rgb(0,255,0,0.5)';
+       }
+    else
+       {
+        stickyHeaderDiv.style.backgroundColor = 'rgb(255,0,0,0.5)';
+       }
+
 
     //css styling for sticky div
     stickyDiv.style.textAlign = "center";
@@ -151,7 +162,7 @@ function createNote(noteId, userId, xPos, yPos, innerText, color, urlId) {
 
     if(innerText == "")
     {
-        stickyText.placeholder = "New Note!";
+        stickyText.placeholder = "New "+newNoteMode+" Note!";
     }
     else
     {
@@ -180,7 +191,7 @@ chrome.runtime.onMessage.addListener(
         //read the message
         if (message.message == "createNote") {
             //create new note
-            getNewNoteFromServer();
+            addNewNoteWithMode();
         }
         if(message.message == "clearNotes")
         {
@@ -196,19 +207,41 @@ chrome.runtime.onMessage.addListener(
             console.log("changing theme");
             toggleDarkMode();
         }
+
+        if (message.message == "toggleNoteMode") {
+            console.log("changing note mode")
+            toggleNoteMode();
+        }
         //awknowledge message recieved
         sendResponse({ message: "Recieved message" });
     }
 );
 
 
-function createNewSticky(newSticky)
+function createNewSticky(newSticky, privacy)
    {
     //create new note
+    newSticky.xPos += "px";
+    newSticky.yPos += "px";
     stickyNotes.push(newSticky);
-    createNote(newSticky.id, newSticky.user, newSticky.xPos + "px", newSticky.yPos + "px", newSticky.innerText, newSticky.color, newSticky.url);
+    createNote(newSticky.id, newSticky.user, newSticky.xPos, newSticky.yPos, newSticky.innerText, newSticky.color, newSticky.url, privacy);
     //update drag functionality for each note
     updateDrag();
+   }
+
+function addNewNoteWithMode()
+   {
+    if(noteMode == "public")
+       {
+        getNewNoteFromServer()
+       }
+    if(noteMode == "private")
+       {
+        let newSticky = {id: localNoteId, user: currentUserID, xPos: 300, yPos: 300+window.scrollY, innerText: "", color: "rgb(255,255,0,0.8)", url: urlString, privacy: "private"};
+        localNoteId++;
+        createNewSticky(newSticky, "private");
+        saveNotes();
+       }
    }
 
 //clearNotes: clears stickyNote array, removes each element from DOC, and save
@@ -289,6 +322,17 @@ function toggleDarkMode(){
     isDarkMode = !isDarkMode;
 }
 
+function toggleNoteMode() {
+    if(noteMode == "public")
+       {
+        noteMode = "private";
+       }
+    else
+       {
+        noteMode = "public";
+       }
+}
+
 
 //DRAGABLE CODE:
 
@@ -351,8 +395,11 @@ function dragElement(elmnt) {
             if (stickyNotes[i].id == elmnt.id) {
                 stickyNotes[i].xPos = elmnt.style.left;
                 stickyNotes[i].yPos = elmnt.style.top;
-                //Update database
-                updateNoteInServer(i);
+                if(stickyNotes[i].privacy == "public")
+                   {
+                    //Update database
+                    updateNoteInServer(i);
+                   }
                 break;
             }
         }
@@ -363,7 +410,10 @@ function dragElement(elmnt) {
     function deleteNote() {
         for (let i = 0; i < stickyNotes.length; i++) {
             if (stickyNotes[i].id == elmnt.id) {
-                deleteNoteInServer(i);
+                if(stickyNotes[i].privacy == "public")
+                   {
+                    deleteNoteInServer(i);
+                   }
                 pageBody.removeChild(elmnt);
                 stickyNotes.splice(i, 1);
                 break;
@@ -378,12 +428,15 @@ function dragElement(elmnt) {
         elmnt.children[1].style.height = "auto";
         elmnt.children[1].style.height = `${elmnt.children[1].scrollHeight}px`;
         for (let i = 0; i < stickyNotes.length; i++) {
-            if (stickyNotes[i].id == elmnt.id) {
+            if(stickyNotes[i].id == elmnt.id)
+               {
                 stickyNotes[i].innerText = elmnt.children[1].value;
-                //Update database
-                updateNoteInServer(i);
+                if (stickyNotes[i].privacy == "public") {
+                    //Update database
+                    updateNoteInServer(i);
+                }
                 break;
-            }
+               }
         }
         //save sticky notes
         saveNotes();
@@ -410,7 +463,20 @@ function dragElement(elmnt) {
 
 function saveNotes()
     {
-    localStorage.setItem(urlString+"stickyData", JSON.stringify(stickyNotes));
+    let localNotes = [];
+    for(let i = 0; i < stickyNotes.length; i++)
+       {
+        if(stickyNotes[i].privacy == "private")
+           {
+            localNotes.push(stickyNotes[i]);
+            console.log(stickyNotes[i]);
+            if(stickyNotes[i].id >= localNoteId)
+               {
+                localNotesId = stickyNotes[i].id + 1;
+               }
+           }
+       }
+    localStorage.setItem(urlString+"stickyData", JSON.stringify(localNotes));
     console.log("notes saved!");
     }
 
@@ -422,11 +488,14 @@ function displayNotes()
     {
         console.log("loading notes");
         stickyNotes = JSON.parse(stickyData);
+        console.log(stickyNotes);
         for(let i = 0; i < stickyNotes.length; i++)
         {
-            createNote(stickyNotes[i].xPos, stickyNotes[i].yPos, stickyNotes[i].innerText, stickyNotes[i].color, stickyNotes[i].id);
+            console.log("made private note?");
+            createNote(stickyNotes[i].id, stickyNotes[i].user, stickyNotes[i].xPos, stickyNotes[i].yPos, stickyNotes[i].innerText, stickyNotes[i].color, stickyNotes[i].url, "private");
         }
-        console.log(stickyNotes);
+        //console.log(JSON.parse(stickyData));
+        saveNotes();
         //update drag functionality for each note
         updateDrag();
     }
@@ -531,8 +600,8 @@ async function getNotesFromServer(url)
                 {
                     console.log("many stick");
                     let newSticky = {id: note[0], user: note[1], xPos: note[2], yPos: note[3],
-                        innerText: note[4], color: note[5], url: note[6]};
-                    createNewSticky(newSticky);
+                        innerText: note[4], color: note[5], url: note[6], privacy: "public"};
+                    createNewSticky(newSticky, "public");
                 }
             }
             
@@ -572,8 +641,8 @@ async function getNewNoteFromServer()
         let note = await response.json();
 
         let newSticky = {id: note[0], user: note[1], xPos: note[2], yPos: note[3],
-            innerText: note[4], color: note[5], url: note[6]};
-        createNewSticky(newSticky);
+            innerText: note[4], color: note[5], url: note[6], privacy: "public"};
+        createNewSticky(newSticky, "public");
 
         }
     //if server is unreachable catch error and print
