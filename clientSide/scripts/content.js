@@ -466,7 +466,20 @@ function dragElement(elmnt) {
 
 function exportNotes()
    {
+    //create output string
+    let outputString = "";
+    for(let noteIndex = 0; noteIndex < stickyNotes.length; noteIndex++)
+       {
+        outputString += (stickyNotes[noteIndex].innerText + "\n");
+       }
     
+    //create downloadable file
+    let link = document.createElement('a');
+    let file = new Blob([outputString], {type: 'text/plain'});
+    link.href = URL.createObjectURL(file);
+    link.download = "exportedNotes.txt";
+    link.click();
+    URL.revokeObjectURL(link.href);
    }
 
 function saveNotes()
