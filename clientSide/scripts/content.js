@@ -215,7 +215,11 @@ chrome.runtime.onMessage.addListener(
 
         if (message.message == "exportNotes") {
             console.log("exporting notes")
-            exportNotes();
+            //check if there are any notes to export
+            if(stickyNotes.length > 0)
+               {
+                exportNotes();
+               }
         }
         //awknowledge message recieved
         sendResponse({ message: "Recieved message" });
@@ -467,10 +471,17 @@ function dragElement(elmnt) {
 function exportNotes()
    {
     //create output string
-    let outputString = "";
+    let noteDivider = "******************************\n"
+    let outputString = "Exported Notes from WebNotes!\n";
+    let noteText = "";
     for(let noteIndex = 0; noteIndex < stickyNotes.length; noteIndex++)
        {
-        outputString += (stickyNotes[noteIndex].innerText + "\n");
+        noteText = stickyNotes[noteIndex].innerText
+        if(noteText == "")
+           {
+            noteText = "(empty)";
+           }
+        outputString += (noteDivider + "Note " + (noteIndex + 1) + ":\n" + noteText + "\n");
        }
     
     //create downloadable file
