@@ -144,6 +144,25 @@ function getStatus() {
     
 }
 
+function exportNotes()
+   {
+    chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        //check if active tab is canvas
+        console.log(tabs[0])
+        if(tabs.length > 0 && tabs[0].url.includes("canvas.nau.edu"))
+           {
+            //send message "exportNotes"
+            chrome.tabs.sendMessage(tabs[0].id, {message:"exportNotes"}, function(response){
+                //log response
+                if(response)
+                   {
+                    console.log(response.message);
+                   }
+               });
+           }
+       });
+   }
+
 function updateButtonText() {
     if(darkMode)
         {
@@ -175,6 +194,7 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("clearText").addEventListener("click", clearSearchBox)
     document.getElementById("darkModeBtn").addEventListener("click", toggleDarkMode);
     document.getElementById("noteModeBtn").addEventListener("click", toggleNoteMode);
+    document.getElementById("exportNotesBtn").addEventListener("click", exportNotes);
     // Other initializations...
 });
 

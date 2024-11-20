@@ -212,6 +212,11 @@ chrome.runtime.onMessage.addListener(
             console.log("changing note mode")
             toggleNoteMode();
         }
+
+        if (message.message == "exportNotes") {
+            console.log("exporting notes")
+            exportNotes();
+        }
         //awknowledge message recieved
         sendResponse({ message: "Recieved message" });
     }
@@ -459,7 +464,10 @@ function dragElement(elmnt) {
        }
 }
 
-
+function exportNotes()
+   {
+    
+   }
 
 function saveNotes()
     {
