@@ -212,6 +212,15 @@ chrome.runtime.onMessage.addListener(
             console.log("changing note mode")
             toggleNoteMode();
         }
+
+        if (message.message == "exportNotes") {
+            console.log("exporting notes")
+            //check if there are any notes to export
+            if(stickyNotes.length > 0)
+               {
+                exportNotes();
+               }
+        }
         //awknowledge message recieved
         sendResponse({ message: "Recieved message" });
     }
@@ -459,7 +468,30 @@ function dragElement(elmnt) {
        }
 }
 
-
+function exportNotes()
+   {
+    //create output string
+    let noteDivider = "******************************\n"
+    let outputString = "Exported Notes from WebNotes!\n";
+    let noteText = "";
+    for(let noteIndex = 0; noteIndex < stickyNotes.length; noteIndex++)
+       {
+        noteText = stickyNotes[noteIndex].innerText
+        if(noteText == "")
+           {
+            noteText = "(empty)";
+           }
+        outputString += (noteDivider + "Note " + (noteIndex + 1) + ":\n" + noteText + "\n");
+       }
+    
+    //create downloadable file
+    let link = document.createElement('a');
+    let file = new Blob([outputString], {type: 'text/plain'});
+    link.href = URL.createObjectURL(file);
+    link.download = "exportedNotes.txt";
+    link.click();
+    URL.revokeObjectURL(link.href);
+   }
 
 function saveNotes()
     {
