@@ -61,6 +61,60 @@ function clearSearchBox()
     searchNotes();
    }
 
+function login() 
+    {
+    // Get the login input values
+    const username = document.getElementById("usernameInput").value;
+    const password = document.getElementById("passwordInput").value;
+
+    // Validate that inputs are not empty
+    if (!username || !password) {
+        alert("Please enter both username and password.");
+        return;
+    }
+
+    // Send login details to the background script or server for validation
+    chrome.runtime.sendMessage({ message: "login", username: username, password: password }, function(response) {
+        if (response && response.success) {
+            console.log("Login successful:", response.message);
+            alert("Login successful!");
+
+            // Perform post-login actions, e.g., update UI or fetch user-specific data
+            updateUIAfterLogin(response.userData);
+        } else {
+            console.error("Login failed:", response.message);
+            alert("Login failed. Please check your credentials.");
+        }
+    });
+}
+
+// Update the UI after a successful login
+function updateUIAfterLogin(userData) {
+    // Example: Display user's name or change button states
+    document.getElementById("userGreeting").innerText = `Welcome, ${userData.username}!`;
+    document.getElementById("loginBtn").disabled = true;
+    document.getElementById("logoutBtn").style.display = "block"; // Show logout button
+}
+
+// Add a logout function
+function logout() {
+    chrome.runtime.sendMessage({ message: "logout" }, function(response) {
+        if (response && response.success) {
+            console.log("Logout successful");
+            alert("You have been logged out.");
+            resetUIAfterLogout();
+        } else {
+            console.error("Logout failed:", response.message);
+        }
+    });
+}
+
+// Reset the UI after a logout
+function resetUIAfterLogout() {
+    document.getElementById("userGreeting").innerText = "";
+    document.getElementById("loginBtn").disabled = false;
+    document.getElementById("logoutBtn").style.display = "none"; // Hide logout button
+}
 //toggleDarkMode: sends message to toggle dark mode
 function toggleDarkMode() {
     //send message to worker script to update dark mode bool
@@ -195,6 +249,12 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("darkModeBtn").addEventListener("click", toggleDarkMode);
     document.getElementById("noteModeBtn").addEventListener("click", toggleNoteMode);
     document.getElementById("exportNotesBtn").addEventListener("click", exportNotes);
+    
+    // Add event listeners for login and logout
+    document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("loginBtn").addEventListener("click", login);
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+});
     // Other initializations...
 });
 
