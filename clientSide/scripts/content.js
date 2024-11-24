@@ -9,6 +9,10 @@ var currentUserID = 1;
 let isDarkMode = false;
 var noteMode = "public";
 var localNoteId = 1000;
+let currentUser = null;
+// Hardcoded credentials for testing
+const validUsername = "testUser";
+const validPassword = "password123";
 
 //initWebPage: creates webpage note that tells the user
 //  the webpage is audited by WebNotes
@@ -684,6 +688,128 @@ async function getNewNoteFromServer()
         }
     }  
 
+// Function to handle login
+async function login(username, password) 
+{
+    console.log("Attempting to log in...");
+    if (username === validUsername && password === validPassword) {
+        console.log("Login successful");
+        currentUser = { username }; // Mock user object
+        alert(`Welcome, ${username}!`);
+        document.getElementById("loginButton").style.display = "none";
+        document.getElementById("logoutButton").style.display = "block";
+    } else {
+        console.log("Login failed: Invalid credentials");
+        alert("Invalid username or password.");
+    }
+}
+
+// Function to handle logout
+async function logout() 
+{
+    console.log("Logging out...");
+    currentUser = null;
+    alert("You have been logged out.");
+    document.getElementById("loginButton").style.display = "block";
+    document.getElementById("logoutButton").style.display = "none";
+}
+
+
+// Function to initialize login button and form
+function initLoginForm() {
+    const loginForm = document.createElement("div");
+    loginForm.id = "loginForm";
+    loginForm.style.position = "fixed";
+    loginForm.style.top = "50%";
+    loginForm.style.left = "50%";
+    loginForm.style.transform = "translate(-50%, -50%)";
+    loginForm.style.padding = "20px";
+    loginForm.style.background = isDarkMode ? "rgb(47,55,107)" : "white";
+    loginForm.style.color = isDarkMode ? "white" : "black";
+    loginForm.style.boxShadow = "0px 4px 8px rgba(0,0,0,0.2)";
+    loginForm.style.borderRadius = "8px";
+    loginForm.style.display = "none";
+    loginForm.style.zIndex = "1000";
+
+    loginForm.innerHTML = `
+        <h3>Login to WebNotes</h3>
+        <label for="usernameInput">Username:</label><br>
+        <input type="text" id="usernameInput" placeholder="Enter your username"><br><br>
+        <label for="passwordInput">Password:</label><br>
+        <input type="password" id="passwordInput" placeholder="Enter your password"><br><br>
+        <button id="loginSubmitBtn">Login</button>
+        <button id="cancelLoginBtn">Cancel</button>
+    `;
+
+    document.body.appendChild(loginForm);
+
+    // Add event listeners for login form buttons
+    document.getElementById("loginSubmitBtn").addEventListener("click", () => {
+        const username = document.getElementById("usernameInput").value;
+        const password = document.getElementById("passwordInput").value;
+        login(username, password).then(() => {
+            loginForm.style.display = "none"; // Hide the form after login
+        });
+    });
+
+    document.getElementById("cancelLoginBtn").addEventListener("click", () => {
+        loginForm.style.display = "none"; // Hide the form on cancel
+    });
+}
+
+// Initialize login/logout buttons in the menu
+function addLoginLogoutButtons() {
+    const menuList = document.getElementById("menu");
+    const loginButton = document.createElement("button");
+    loginButton.id = "loginButton";
+    loginButton.innerText = "Login";
+    loginButton.style.margin = "5px";
+    loginButton.style.backgroundColor = "yellow"; // Set background color to yellow
+    loginButton.style.border = "1px solid black"; // Optional: Add a black border for contrast
+    loginButton.style.color = "black"; // Set text color
+    loginButton.style.padding = "10px"; // Add padding for better appearance
+    loginButton.style.borderRadius = "5px"; // Optional: Add rounded corners
+
+    const logoutButton = document.createElement("button");
+    logoutButton.id = "logoutButton";
+    logoutButton.innerText = "Logout";
+    logoutButton.style.margin = "5px";
+    logoutButton.style.display = "none"; // Initially hidden
+    logoutButton.style.backgroundColor = "yellow"; // Set background color to yellow
+    logoutButton.style.border = "1px solid black"; // Optional: Add a black border for contrast
+    logoutButton.style.color = "black"; // Set text color
+    logoutButton.style.padding = "10px"; // Add padding for better appearance
+    logoutButton.style.borderRadius = "5px"; // Optional: Add rounded corners
+
+    menuList.appendChild(loginButton);
+    menuList.appendChild(logoutButton);
+
+    // Add event listeners
+    loginButton.addEventListener("click", () => {
+        document.getElementById("loginForm").style.display = "block";
+    });
+
+    logoutButton.addEventListener("click", () => {
+        logout().then(() => {
+            loginButton.style.display = "block";
+            logoutButton.style.display = "none";
+        });
+    });
+
+    // Update buttons based on login state
+    if (currentUser) {
+        loginButton.style.display = "none";
+        logoutButton.style.display = "block";
+    }
+}
+
+// Initialize the content script
+function initContentScript() {
+    initLoginForm();
+    addLoginLogoutButtons();
+}
+
+initContentScript();
 initWebPage();
 
 //try to export functions
