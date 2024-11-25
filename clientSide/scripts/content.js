@@ -817,7 +817,7 @@ try
    {
     //export functions for unit testing
     module.exports = {createNote, createNewSticky, clearNotes, searchNotes, clearSearchHighlights, 
-        deleteNoteInServer, updateNoteInServer, getNotesFromServer, getNewNoteFromServer, toggleDarkMode};
+        deleteNoteInServer, updateNoteInServer, getNotesFromServer, getNewNoteFromServer, toggleDarkMode, toggleNoteMode};
    }
 catch(error)
    {

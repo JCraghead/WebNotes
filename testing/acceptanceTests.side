@@ -1,0 +1,229 @@
+{
+  "id": "b2426f93-e270-431d-90d7-f5edb502c6b9",
+  "version": "2.0",
+  "name": "WebNotes",
+  "url": "https://canvas.nau.edu",
+  "tests": [{
+    "id": "ea28ed8d-e0ae-4133-a252-2e3a42540ffd",
+    "name": "Single Public Note",
+    "commands": [{
+      "id": "7dac4226-9a80-4b5e-b7ec-822815eef42a",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "d3074f73-5df1-4be8-8967-ef98aa774374",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "2576x1416",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "c38ac8d2-3605-48c5-9058-40e3bb5fcd6a",
+      "comment": "",
+      "command": "click",
+      "target": "css=a > div > img",
+      "targets": [
+        ["css=a > div > img", "css:finder"],
+        ["xpath=//ul[@id='menu']/li[12]/a/div/img", "xpath:idRelative"],
+        ["xpath=//a/div/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "4687598d-63c5-47d8-85e8-72c07c2127ec",
+      "comment": "",
+      "command": "mouseDownAt",
+      "target": "css=.stickyHeader",
+      "targets": [
+        ["css=.stickyHeader", "css:finder"],
+        ["xpath=//div[@id='384']/div", "xpath:idRelative"],
+        ["xpath=//body/div[9]/div", "xpath:position"]
+      ],
+      "value": "-791,-142"
+    }, {
+      "id": "e715748b-4573-4dce-a77f-c87ffa9a866d",
+      "comment": "",
+      "command": "mouseMoveAt",
+      "target": "css=.stickyText",
+      "targets": [
+        ["css=.stickyText", "css:finder"],
+        ["xpath=//div[@id='384']/textarea", "xpath:idRelative"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": "58,-4"
+    }, {
+      "id": "6bffc4d6-c5c9-4ae4-8df9-14df628d1e94",
+      "comment": "",
+      "command": "mouseUpAt",
+      "target": "css=.stickyText",
+      "targets": [
+        ["css=.stickyText", "css:finder"],
+        ["xpath=//div[@id='384']/textarea", "xpath:idRelative"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": "58,-4"
+    }, {
+      "id": "44be07be-45bc-46c7-8958-92ebdcf1dbc6",
+      "comment": "",
+      "command": "click",
+      "target": "css=.stickyHeader",
+      "targets": [
+        ["css=.stickyHeader", "css:finder"],
+        ["xpath=//div[@id='384']/div", "xpath:idRelative"],
+        ["xpath=//body/div[9]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "c55e215c-198a-4cf5-a417-01dd355aefad",
+      "comment": "",
+      "command": "click",
+      "target": "css=.stickyText",
+      "targets": [
+        ["css=.stickyText", "css:finder"],
+        ["xpath=//div[@id='384']/textarea", "xpath:idRelative"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "289c61f9-b558-4762-814e-215f34ad3e48",
+      "comment": "",
+      "command": "type",
+      "target": "css=.stickyText",
+      "targets": [
+        ["css=.stickyText", "css:finder"],
+        ["xpath=//div[@id='384']/textarea", "xpath:idRelative"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": "This new note is working!"
+    }, {
+      "id": "a1ef3604-3746-4808-a963-5290412a93c2",
+      "comment": "",
+      "command": "mouseDown",
+      "target": "css=div:nth-child(3) > img:nth-child(1)",
+      "targets": [
+        ["css=div:nth-child(3) > img:nth-child(1)", "css:finder"],
+        ["xpath=//div[@id='384']/div[2]/div[2]/img", "xpath:idRelative"],
+        ["xpath=//div[2]/div[2]/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "3a73e71d-0358-4922-80b3-dedbd48af7ea",
+      "comment": "",
+      "command": "mouseUp",
+      "target": "css=div:nth-child(3) > div:nth-child(3)",
+      "targets": [
+        ["css=div:nth-child(3) > div:nth-child(3)", "css:finder"],
+        ["xpath=//div[@id='384']/div[2]/div[2]", "xpath:idRelative"],
+        ["xpath=//div[9]/div[2]/div[2]", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "75a8f76d-de99-4eb1-a7b1-4ff94d3ad870",
+      "comment": "",
+      "command": "click",
+      "target": "css=div:nth-child(3) > div:nth-child(3)",
+      "targets": [
+        ["css=div:nth-child(3) > div:nth-child(3)", "css:finder"],
+        ["xpath=//div[@id='384']/div[2]/div[2]", "xpath:idRelative"],
+        ["xpath=//div[9]/div[2]/div[2]", "xpath:position"]
+      ],
+      "value": ""
+    }]
+  }, {
+    "id": "7cab45ec-4927-401c-86c2-b415e5a02462",
+    "name": "Drag Note",
+    "commands": [{
+      "id": "0bdea190-31d5-4a1d-b208-4ec85c6d9359",
+      "comment": "",
+      "command": "open",
+      "target": "/",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "acdbfd53-dd21-484a-8471-bd8841f6bc76",
+      "comment": "",
+      "command": "setWindowSize",
+      "target": "2576x1416",
+      "targets": [],
+      "value": ""
+    }, {
+      "id": "c3a10a6e-fe85-4c10-8768-b9f558888890",
+      "comment": "",
+      "command": "click",
+      "target": "css=a > div > img",
+      "targets": [
+        ["css=a > div > img", "css:finder"],
+        ["xpath=//ul[@id='menu']/li[12]/a/div/img", "xpath:idRelative"],
+        ["xpath=//a/div/img", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "7ebb443b-56e5-4b2b-8170-a88fa66ccb64",
+      "comment": "",
+      "command": "mouseDownAt",
+      "target": "css=.stickyHeader",
+      "targets": [
+        ["css=.stickyHeader", "css:finder"],
+        ["xpath=//div[@id='388']/div", "xpath:idRelative"],
+        ["xpath=//body/div[9]/div", "xpath:position"]
+      ],
+      "value": "6,-427"
+    }, {
+      "id": "0fc0bc0a-df4a-437a-9061-477921d0e63c",
+      "comment": "",
+      "command": "mouseMoveAt",
+      "target": "css=.stickyText",
+      "targets": [
+        ["css=.stickyText", "css:finder"],
+        ["xpath=//div[@id='388']/textarea", "xpath:idRelative"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": "57,-5"
+    }, {
+      "id": "dd63bd32-ed62-4a55-8c8a-18c5ac23fcfc",
+      "comment": "",
+      "command": "mouseUpAt",
+      "target": "css=.stickyText",
+      "targets": [
+        ["css=.stickyText", "css:finder"],
+        ["xpath=//div[@id='388']/textarea", "xpath:idRelative"],
+        ["xpath=//textarea", "xpath:position"]
+      ],
+      "value": "57,-5"
+    }, {
+      "id": "bb472593-425a-4ed5-ad52-f5d53635a3f2",
+      "comment": "",
+      "command": "click",
+      "target": "css=.stickyHeader",
+      "targets": [
+        ["css=.stickyHeader", "css:finder"],
+        ["xpath=//div[@id='388']/div", "xpath:idRelative"],
+        ["xpath=//body/div[9]/div", "xpath:position"]
+      ],
+      "value": ""
+    }, {
+      "id": "afcee6d6-1dd4-43c5-af69-83c00d20238e",
+      "comment": "",
+      "command": "mouseDownAt",
+      "target": "css=.stickyHeader",
+      "targets": [
+        ["css=.stickyHeader", "css:finder"],
+        ["xpath=//div[@id='388']/div", "xpath:idRelative"],
+        ["xpath=//body/div[9]/div", "xpath:position"]
+      ],
+      "value": "32,402"
+    }]
+  }],
+  "suites": [{
+    "id": "e6775e39-ad42-46fd-b002-ac7208892770",
+    "name": "Default Suite",
+    "persistSession": false,
+    "parallel": false,
+    "timeout": 300,
+    "tests": ["ea28ed8d-e0ae-4133-a252-2e3a42540ffd"]
+  }],
+  "urls": ["https://canvas.nau.edu/"],
+  "plugins": []
+}
