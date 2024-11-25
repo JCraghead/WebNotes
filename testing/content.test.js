@@ -82,4 +82,14 @@ test('Try getting toggle dark mode with toggleDarkMode()', () => {
     expect(document.getElementById(1).style.backgroundColor).toBe("rgb(0, 0, 0)");
     content.toggleDarkMode();
     expect(document.getElementById(1).style.backgroundColor).toBe("rgb(47, 55, 107)");
+    content.clearNotes();
+});
+
+test('Try switching between public and private modes', () => {
+    content.createNewSticky({id:1, user:0, xPos:300, yPos:300, innerText:"not null note", color:"rgb(0,0,0)", url:"test.com"}, "private");
+    expect(document.getElementById(1)).not.toBeNull();
+    content.toggleNoteMode();
+    content.createNewSticky({id:2, user:0, xPos:300, yPos:300, innerText:"not null note 2", color:"rgb(0,0,0)", url:"test.com"}, "private");
+    expect(document.getElementById(2)).not.toBeNull();
+    content.clearNotes();
 });
