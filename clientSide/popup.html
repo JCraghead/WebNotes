@@ -5,22 +5,26 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <h1>WebNotes!</h1>
+        <nobr id="title">WebNotes!</nobr>
 
-        <nobr>Welcome to WebNotes V1.2</nobr>
-
+        <nobr>Welcome to WebNotes V1.5</nobr>
+        <br>
+        <a href="https://webnotes.space" target="_blank">Check us out!</a>
         <br>
         <div id="buttons">
-            <button id="noteBtn">Create Note</button>
-            <button id="clearBtn">Clear All Notes</button>
-            <div id="searchDiv">
-                <input type="text" id="searchInput" placeholder="Search notes...">
-                <img id="clearText" src="images/deleteButton.svg">
+            <div id="col1">
+                <button id="noteBtn">Create Note</button>
+                <button id="clearBtn">Clear All Notes</button>
+                <button id="darkModeBtn">Dark Mode</button>
             </div>
-            <button id="darkModeBtn">Dark Mode</button>
-            <button id="noteModeBtn">New Notes: Public</button>
-            <button id="exportNotesBtn">Export Notes</button>
-            <a href="https://github.com/JCraghead/WebNotes" target="_blank">Follow us on GitHub!</a>
+            <div id="col2"> 
+                <div id="searchDiv">
+                    <input type="text" id="searchInput" placeholder="Search notes..">
+                    <img id="clearText" src="images/deleteButton.svg">
+                </div>
+                <button id="exportNotesBtn">Export Notes</button>
+                <button id="noteModeBtn">New Notes: Public</button>
+            </div>
         </div>
         <script src="scripts/popup.js"></script>
     </body>

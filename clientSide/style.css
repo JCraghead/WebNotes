@@ -1,20 +1,83 @@
 body
 {
-    color:rgb(255, 255, 0);
-    background-color: rgb(172, 172, 172);
+    color:black;
+    background: linear-gradient(#f5f576,#f8f895);
+    width: 300px;
+    height: 300px;
 }
 
 a:visited
 {
-    color:rgb(255, 255, 0);
+    color:black;
 }
+
+#title{
+    font-family:'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
+    font-size: 40px;
+    font-weight: 800;
+}
+
 #buttons{
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+
+    
+}
+#col1{
+    width:150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#col2{
+    width:150px;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+
+
+
+
+button{
+  margin: 2px;
+  background-color: #fff;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  
+  color: #0f1111;
+  cursor: pointer;
+  display: inline-block;
+  font-family:Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  line-height: 20px;
+  padding: 3px 10px 3px 10px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  width: 135px;
+  height: 50px;
+}
+
+button:hover {
+  background-color: #f7fafa;
+}
+
+button:focus{
+  border-color: #008296;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  outline: 0;
+}
+
 #searchDiv{
+    width: 200px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -22,7 +85,17 @@ a:visited
 }
 
 input{
-    max-width: 60%;
+    max-width: 42%;
+
+    border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  font-size: 10px;
+  line-height: 20px;
+  margin-top: 2px;
+  padding: 3px 10px 3px 11px;
+  height: 43px;
+  position: relative;
 }
 
 #clearText{
