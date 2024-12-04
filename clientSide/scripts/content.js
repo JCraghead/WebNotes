@@ -759,7 +759,17 @@ function initLoginForm() {
 
 // Initialize login/logout buttons in the menu
 function addLoginLogoutButtons() {
+
     const menuList = document.getElementById("menu");
+    const menuItemListWrapper = document.createElement("li");
+    const menuItemAnchorWrapper = document.createElement("a");
+    const menuItemDivWrapper = document.createElement("div");
+
+    const menuItemListWrapper2 = document.createElement("li");
+    const menuItemAnchorWrapper2 = document.createElement("a");
+    const menuItemDivWrapper2 = document.createElement("div");
+
+
     const loginButton = document.createElement("button");
     loginButton.id = "loginButton";
     loginButton.innerText = "Login";
@@ -769,6 +779,15 @@ function addLoginLogoutButtons() {
     loginButton.style.color = "black"; // Set text color
     loginButton.style.padding = "10px"; // Add padding for better appearance
     loginButton.style.borderRadius = "5px"; // Optional: Add rounded corners
+
+    menuItemDivWrapper.style.display = "flex";
+    menuItemDivWrapper.style.alignItems = "center";
+    menuItemDivWrapper.style.justifyContent = "center";
+
+    menuItemDivWrapper2.style.display = "flex";
+    menuItemDivWrapper2.style.alignItems = "center";
+    menuItemDivWrapper2.style.justifyContent = "center";
+
 
     const logoutButton = document.createElement("button");
     logoutButton.id = "logoutButton";
@@ -781,8 +800,15 @@ function addLoginLogoutButtons() {
     logoutButton.style.padding = "10px"; // Add padding for better appearance
     logoutButton.style.borderRadius = "5px"; // Optional: Add rounded corners
 
-    menuList.appendChild(loginButton);
-    menuList.appendChild(logoutButton);
+    menuItemDivWrapper.appendChild(loginButton);
+    menuItemAnchorWrapper.appendChild(menuItemDivWrapper);
+    menuItemListWrapper.appendChild(menuItemAnchorWrapper);
+    menuList.appendChild(menuItemListWrapper);
+    
+    menuItemDivWrapper2.appendChild(logoutButton);
+    menuItemAnchorWrapper2.appendChild(menuItemDivWrapper2);
+    menuItemListWrapper2.appendChild(menuItemAnchorWrapper2);
+    menuList.appendChild(menuItemListWrapper2);
 
     // Add event listeners
     loginButton.addEventListener("click", () => {
