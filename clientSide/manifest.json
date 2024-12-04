@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "WebNotes",
     "description": "WebNotes client side handler",
-    "version": "1.5",
+    "version": "1.5.1",
     "permissions": [
       "tabs",
       "activeTab"
